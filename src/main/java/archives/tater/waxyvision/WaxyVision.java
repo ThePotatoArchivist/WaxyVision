@@ -4,7 +4,6 @@ import archives.tater.waxyvision.mixin.LevelRendererAccessor;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.model.loading.v1.CompositeBlockStateModel;
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 
@@ -12,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.renderer.block.model.Variant;
-import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.HoneycombItem;
@@ -47,20 +45,10 @@ public class WaxyVision implements ClientModInitializer {
 				var state = context.state();
 				if (!HoneycombItem.WAXABLES.get().containsValue(state.getBlock())) return model;
 
-				return new BlockStateModel.SimpleCachedUnbakedRoot(CompositeBlockStateModel.Unbaked.of(List.of(
-						new BlockStateModel.Unbaked() {
-							@Override
-							public BlockStateModel bake(ModelBaker baker) {
-								return model.bake(state, baker);
-							}
-
-							@Override
-							public void resolveDependencies(Resolver resolver) {
-								model.resolveDependencies(resolver);
-							}
-						},
-						new OverlayBlockStateModel.Unbaked(new SingleVariant.Unbaked(new Variant(OUTLINE_CUBE)))
-				)));
+				return new CompositeBlockstateModelRoot(List.of(
+						model,
+						new BlockStateModel.SimpleCachedUnbakedRoot(new OverlayBlockStateModel.Unbaked(new SingleVariant.Unbaked(new Variant(OUTLINE_CUBE))))
+				));
 			});
 		});
 
