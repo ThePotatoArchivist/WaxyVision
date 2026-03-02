@@ -12,6 +12,8 @@
     "requireAnnotations": true
   },
   "client": [
-    "LevelRendererAccessor"
+    "BlockStateDefinitionsMixin",
+    "LevelRendererAccessor",
+    "ModelManagerMixin"
   ]
 }

@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,7 +35,7 @@ public class OverlayBlockStateModel extends WrapperBlockStateModel {
 
     @Override
     public List<BlockModelPart> collectParts(RandomSource random) {
-        return shouldShow() ? super.collectParts(random) : List.of();
+        return shouldShow() ? List.of() : super.collectParts(random);
     }
 
     @Override
@@ -45,15 +46,25 @@ public class OverlayBlockStateModel extends WrapperBlockStateModel {
 
     @Override
     public @Nullable Object createGeometryKey(BlockAndTintGetter blockView, BlockPos pos, BlockState state, RandomSource random) {
-        if (!shouldShow()) return null;
-        var child = super.createGeometryKey(blockView, pos, state, random);
-        return child == null ? null : new GeometryKey(child);
+        var geometryKey = super.createGeometryKey(blockView, pos, state, random);
+        if (geometryKey == null) return null;
+        return new GeometryKey(geometryKey);
     }
 
-    public record Unbaked(BlockStateModel.Unbaked wrapped) implements BlockStateModel.Unbaked {
+    @Override
+    public TextureAtlasSprite particleSprite(BlockAndTintGetter blockView, BlockPos pos, BlockState state) {
+        return super.particleSprite(blockView, pos, state);
+    }
+
+    public record Unbaked(BlockStateModel.UnbakedRoot wrapped) implements BlockStateModel.UnbakedRoot {
         @Override
-        public BlockStateModel bake(ModelBaker baker) {
-            return new OverlayBlockStateModel(wrapped.bake(baker));
+        public BlockStateModel bake(BlockState state, ModelBaker baker) {
+            return new OverlayBlockStateModel(wrapped.bake(state, baker));
+        }
+
+        @Override
+        public Object visualEqualityGroup(BlockState state) {
+            return new GeometryKey(wrapped.visualEqualityGroup(state));
         }
 
         @Override

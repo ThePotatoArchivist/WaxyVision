@@ -4,18 +4,21 @@ import archives.tater.waxyvision.mixin.LevelRendererAccessor;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.block.model.SingleVariant;
-import net.minecraft.client.renderer.block.model.Variant;
+import net.minecraft.client.resources.model.BlockStateModelLoader;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,18 +39,41 @@ public class WaxyVision implements ClientModInitializer {
 	public static boolean showOverlay = false;
 
 	public static final Identifier OUTLINE_CUBE = id("block/outline_cube");
-	public static final ExtraModelKey<BlockStateModel> OUTLINE_CUBE_KEY = ExtraModelKey.create();
+
+	public static final Identifier OVERLAY_MODELS_KEY = id("overlay_models");
+	public static final OverlayModels overlayModels = new OverlayModels();
+
+	@ApiStatus.Internal
+	@Nullable
+	public static BlockStateModelLoader.LoadedModels loadedModels;
+
+	private static <T extends Comparable<T>> BlockState copy(BlockState target, BlockState source, Property<T> property) {
+		return target.setValue(property, source.getValue(property));
+	}
 
 	@Override
 	public void onInitializeClient() {
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(OVERLAY_MODELS_KEY, overlayModels);
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).addReloaderOrdering(OVERLAY_MODELS_KEY, ResourceReloaderKeys.Client.MODELS);
+
 		ModelLoadingPlugin.register(pluginContext -> {
 			pluginContext.modifyBlockModelOnLoad().register((model, context) -> {
+				if (loadedModels == null) return model;
 				var state = context.state();
-				if (!HoneycombItem.WAXABLES.get().containsValue(state.getBlock())) return model;
+
+				var overlayEntry = overlayModels.getEntry(state.getBlock());
+				if (overlayEntry == null) return model;
+
+				var overlayState = overlayEntry.definition().any();
+				for (Property<?> property : state.getProperties())
+					overlayState = copy(overlayState, state, property);
+
+				var overlayModel = loadedModels.models().get(overlayState);
+				if (overlayModel == null) return model;
 
 				return new CompositeBlockstateModelRoot(List.of(
 						model,
-						new BlockStateModel.SimpleCachedUnbakedRoot(new OverlayBlockStateModel.Unbaked(new SingleVariant.Unbaked(new Variant(OUTLINE_CUBE))))
+						new OverlayBlockStateModel.Unbaked(overlayModel)
 				));
 			});
 		});
