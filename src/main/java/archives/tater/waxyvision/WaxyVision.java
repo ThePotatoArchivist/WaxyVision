@@ -40,7 +40,7 @@ public class WaxyVision implements ClientModInitializer, ModInitializer {
 
 	public static boolean showOverlay = false;
 
-	public static final Identifier OUTLINE_CUBE = id("block/outline_cube");
+	public static final Identifier COPPER_GOLEM_OVERLAY = id("textures/entity/copper_golem.png");
 
 	public static final Identifier OVERLAY_MODELS_KEY = id("overlay_models");
 	public static final OverlayModels overlayModels = new OverlayModels();

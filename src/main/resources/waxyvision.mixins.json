@@ -14,6 +14,7 @@
   "client": [
     "BlockModelGeneratorMixin",
     "BlockStateDefinitionsMixin",
+    "CopperGolemStatueBlockRendererMixin",
     "ItemBlockRenderTypesMixin",
     "LevelRendererAccessor",
     "ModelManagerMixin",
