@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "waxyvision:block/slab"
+    },
+    "type=double": {
+      "model": "waxyvision:block/cube"
+    },
+    "type=top": {
+      "model": "waxyvision:block/slab_top"
+    }
+  }
+}

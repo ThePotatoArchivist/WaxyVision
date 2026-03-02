@@ -1,8 +1,10 @@
 package archives.tater.waxyvision;
 
+import archives.tater.waxyvision.datagen.ModelGenerator;
 import archives.tater.waxyvision.mixin.LevelRendererAccessor;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
@@ -25,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.List;
 
-public class WaxyVision implements ClientModInitializer {
+public class WaxyVision implements ClientModInitializer, ModInitializer {
 	public static final String MOD_ID = "waxyvision";
 	public static Identifier id(String path) {
 		return Identifier.fromNamespaceAndPath(MOD_ID, path);
@@ -90,5 +92,12 @@ public class WaxyVision implements ClientModInitializer {
                     section.setDirty(false);
 			}
 		});
+	}
+
+	@Override
+	public void onInitialize() {
+		if (System.getProperty("fabric-api.datagen") != null) {
+			ModelGenerator.FakeBlocks.init();
+		}
 	}
 }

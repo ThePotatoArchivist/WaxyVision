@@ -43,6 +43,33 @@ public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels
                         Blocks.WAXED_OXIDIZED_COPPER_BULB
                 )
         ));
+        biConsumer.accept(WaxyVision.id("stairs"), new OverlayModels.UnbakedEntry(
+                WaxyVision.id("stairs"),
+                List.of(
+                        Blocks.WAXED_CUT_COPPER_STAIRS,
+                        Blocks.WAXED_EXPOSED_CUT_COPPER_STAIRS,
+                        Blocks.WAXED_WEATHERED_CUT_COPPER_STAIRS,
+                        Blocks.WAXED_OXIDIZED_CUT_COPPER_STAIRS
+                )
+        ));
+        biConsumer.accept(WaxyVision.id("slab"), new OverlayModels.UnbakedEntry(
+                WaxyVision.id("slab"),
+                List.of(
+                        Blocks.WAXED_CUT_COPPER_SLAB,
+                        Blocks.WAXED_EXPOSED_CUT_COPPER_SLAB,
+                        Blocks.WAXED_WEATHERED_CUT_COPPER_SLAB,
+                        Blocks.WAXED_OXIDIZED_CUT_COPPER_SLAB
+                )
+        ));
+        biConsumer.accept(WaxyVision.id("door"), new OverlayModels.UnbakedEntry(
+                WaxyVision.id("door"),
+                List.of(
+                        Blocks.WAXED_COPPER_DOOR,
+                        Blocks.WAXED_EXPOSED_COPPER_DOOR,
+                        Blocks.WAXED_WEATHERED_COPPER_DOOR,
+                        Blocks.WAXED_OXIDIZED_COPPER_DOOR
+                )
+        ));
     }
 
     @Override

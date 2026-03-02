@@ -54,7 +54,7 @@ public class OverlayModels implements PreparableReloadListener {
                     for (var block : unbakedEntry.blocks)
                         overlays.put(block, entry);
                 })
-        ).thenCompose(barrier::wait);
+        ).thenCompose(barrier::wait); // TODO fix race condition
     }
 
     public @Nullable Entry getEntry(Block block) {

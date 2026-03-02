@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_left",
+  "textures": {
+    "bottom": "waxyvision:block/door_bottom",
+    "top": "waxyvision:block/door_top"
+  }
+}

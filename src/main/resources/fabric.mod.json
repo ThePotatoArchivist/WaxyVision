@@ -18,6 +18,9 @@
 		"client": [
 			"archives.tater.waxyvision.WaxyVision"
 		],
+		"main": [
+			"archives.tater.waxyvision.WaxyVision"
+		],
 		"fabric-datagen": [
 			"archives.tater.waxyvision.WaxyVisionDataGenerator"
 		]

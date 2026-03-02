@@ -1,5 +1,6 @@
 package archives.tater.waxyvision;
 
+import archives.tater.waxyvision.datagen.ModelGenerator;
 import archives.tater.waxyvision.datagen.OverlayModelGenerator;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -10,5 +11,6 @@ public class WaxyVisionDataGenerator implements DataGeneratorEntrypoint {
 	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
 		var pack = fabricDataGenerator.createPack();
 		pack.addProvider(OverlayModelGenerator::new);
+		pack.addProvider(ModelGenerator::new);
 	}
 }

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "waxyvision:block/cube",
+    "side": "waxyvision:block/cube",
+    "top": "waxyvision:block/cube"
+  }
+}
