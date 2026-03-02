@@ -79,6 +79,24 @@ public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels
                         Blocks.WAXED_OXIDIZED_COPPER_TRAPDOOR
                 )
         ));
+        biConsumer.accept(WaxyVision.id("chains"), new OverlayModels.UnbakedEntry(
+                WaxyVision.id("chains"),
+                List.of(
+                        Blocks.COPPER_CHAIN.waxed(),
+                        Blocks.COPPER_CHAIN.waxedExposed(),
+                        Blocks.COPPER_CHAIN.waxedWeathered(),
+                        Blocks.COPPER_CHAIN.waxedOxidized()
+                )
+        ));
+        biConsumer.accept(WaxyVision.id("lantern"), new OverlayModels.UnbakedEntry(
+                WaxyVision.id("lantern"),
+                List.of(
+                        Blocks.COPPER_LANTERN.waxed(),
+                        Blocks.COPPER_LANTERN.waxedExposed(),
+                        Blocks.COPPER_LANTERN.waxedWeathered(),
+                        Blocks.COPPER_LANTERN.waxedOxidized()
+                )
+        ));
     }
 
     @Override

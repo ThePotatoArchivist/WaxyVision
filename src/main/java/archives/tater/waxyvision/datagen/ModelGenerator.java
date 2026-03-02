@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -34,6 +35,10 @@ public class ModelGenerator extends FabricModelProvider {
                 .getFamily();
         blockModelGenerators.family(family.getBaseBlock())
                 .generateFor(family);
+        blockModelGenerators.createAxisAlignedPillarBlockCustomModel(FakeBlocks.CHAIN,
+                BlockModelGenerators.plainVariant(TexturedModel.CHAIN.create(FakeBlocks.CHAIN, blockModelGenerators.modelOutput))
+        );
+        blockModelGenerators.createLantern(FakeBlocks.LANTERN);
     }
 
     @Override
@@ -54,6 +59,9 @@ public class ModelGenerator extends FabricModelProvider {
         public static final Block SLAB = register("slab", SlabBlock::new);
         public static final Block DOOR = register("door", properties -> new DoorBlock(BlockSetType.PALE_OAK, properties));
         public static final Block TRAPDOOR = register("trapdoor", properties -> new TrapDoorBlock(BlockSetType.PALE_OAK, properties));
+        public static final Block CHAIN = register("chain", ChainBlock::new);
+        public static final Block LANTERN = register("lantern", LanternBlock::new);
+        public static final Block BARS = register("bars", LanternBlock::new);
 
         public static void init() {
 

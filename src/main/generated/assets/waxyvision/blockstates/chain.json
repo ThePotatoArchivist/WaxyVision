@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "waxyvision:block/chain",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "waxyvision:block/chain"
+    },
+    "axis=z": {
+      "model": "waxyvision:block/chain",
+      "x": 90
+    }
+  }
+}

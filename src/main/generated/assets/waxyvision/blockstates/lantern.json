@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "waxyvision:block/lantern"
+    },
+    "hanging=true": {
+      "model": "waxyvision:block/lantern_hanging"
+    }
+  }
+}
