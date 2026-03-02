@@ -1,0 +1,9 @@
+{
+  "blocks": [
+    "minecraft:waxed_copper_bars",
+    "minecraft:waxed_exposed_copper_bars",
+    "minecraft:waxed_weathered_copper_bars",
+    "minecraft:waxed_oxidized_copper_bars"
+  ],
+  "model": "waxyvision:bars"
+}

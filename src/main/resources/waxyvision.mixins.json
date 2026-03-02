@@ -3,6 +3,7 @@
   "package": "archives.tater.waxyvision.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "BlockModelGeneratorsAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -13,6 +14,7 @@
   "client": [
     "BlockModelGeneratorMixin",
     "BlockStateDefinitionsMixin",
+    "ItemBlockRenderTypesMixin",
     "LevelRendererAccessor",
     "ModelManagerMixin",
     "ModelProviderMixin"

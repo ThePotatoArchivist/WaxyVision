@@ -1,16 +1,19 @@
 package archives.tater.waxyvision.datagen;
 
 import archives.tater.waxyvision.OverlayModels;
-import archives.tater.waxyvision.WaxyVision;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.WeatheringCopperBlocks;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
@@ -20,83 +23,83 @@ public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels
         super(dataOutput, registriesFuture, PackOutput.Target.RESOURCE_PACK, OverlayModels.PATH, OverlayModels.UnbakedEntry.CODEC);
     }
 
+    private static List<Block> waxed(WeatheringCopperBlocks blocks) {
+        return List.of(
+                blocks.waxed(),
+                blocks.waxedExposed(),
+                blocks.waxedWeathered(),
+                blocks.waxedOxidized()
+        );
+    }
+
+    private static void register(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, List<Block> blocks) {
+        var id = BuiltInRegistries.BLOCK.getKey(modelBlock);
+        consumer.accept(id, new OverlayModels.UnbakedEntry(id, blocks));
+    }
+
+    private static void register(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, Block... blocks) {
+        register(consumer, modelBlock, Arrays.asList(blocks));
+    }
+
     @Override
     protected void configure(BiConsumer<Identifier, OverlayModels.UnbakedEntry> biConsumer, HolderLookup.Provider provider) {
-        biConsumer.accept(WaxyVision.id("cube"), new OverlayModels.UnbakedEntry(
-                WaxyVision.id("cube"),
-                List.of(
-                        Blocks.WAXED_COPPER_BLOCK,
-                        Blocks.WAXED_CUT_COPPER,
-                        Blocks.WAXED_COPPER_GRATE,
-                        Blocks.WAXED_COPPER_BULB,
-                        Blocks.WAXED_EXPOSED_COPPER,
-                        Blocks.WAXED_EXPOSED_CUT_COPPER,
-                        Blocks.WAXED_EXPOSED_COPPER_GRATE,
-                        Blocks.WAXED_EXPOSED_COPPER_BULB,
-                        Blocks.WAXED_WEATHERED_COPPER,
-                        Blocks.WAXED_WEATHERED_CUT_COPPER,
-                        Blocks.WAXED_WEATHERED_COPPER_GRATE,
-                        Blocks.WAXED_WEATHERED_COPPER_BULB,
-                        Blocks.WAXED_OXIDIZED_COPPER,
-                        Blocks.WAXED_OXIDIZED_CUT_COPPER,
-                        Blocks.WAXED_OXIDIZED_COPPER_GRATE,
-                        Blocks.WAXED_OXIDIZED_COPPER_BULB
-                )
-        ));
-        biConsumer.accept(WaxyVision.id("stairs"), new OverlayModels.UnbakedEntry(
-                WaxyVision.id("stairs"),
-                List.of(
-                        Blocks.WAXED_CUT_COPPER_STAIRS,
-                        Blocks.WAXED_EXPOSED_CUT_COPPER_STAIRS,
-                        Blocks.WAXED_WEATHERED_CUT_COPPER_STAIRS,
-                        Blocks.WAXED_OXIDIZED_CUT_COPPER_STAIRS
-                )
-        ));
-        biConsumer.accept(WaxyVision.id("slab"), new OverlayModels.UnbakedEntry(
-                WaxyVision.id("slab"),
-                List.of(
-                        Blocks.WAXED_CUT_COPPER_SLAB,
-                        Blocks.WAXED_EXPOSED_CUT_COPPER_SLAB,
-                        Blocks.WAXED_WEATHERED_CUT_COPPER_SLAB,
-                        Blocks.WAXED_OXIDIZED_CUT_COPPER_SLAB
-                )
-        ));
-        biConsumer.accept(WaxyVision.id("door"), new OverlayModels.UnbakedEntry(
-                WaxyVision.id("door"),
-                List.of(
-                        Blocks.WAXED_COPPER_DOOR,
-                        Blocks.WAXED_EXPOSED_COPPER_DOOR,
-                        Blocks.WAXED_WEATHERED_COPPER_DOOR,
-                        Blocks.WAXED_OXIDIZED_COPPER_DOOR
-                )
-        ));
-        biConsumer.accept(WaxyVision.id("trapdoor"), new OverlayModels.UnbakedEntry(
-                WaxyVision.id("trapdoor"),
-                List.of(
-                        Blocks.WAXED_COPPER_TRAPDOOR,
-                        Blocks.WAXED_EXPOSED_COPPER_TRAPDOOR,
-                        Blocks.WAXED_WEATHERED_COPPER_TRAPDOOR,
-                        Blocks.WAXED_OXIDIZED_COPPER_TRAPDOOR
-                )
-        ));
-        biConsumer.accept(WaxyVision.id("chains"), new OverlayModels.UnbakedEntry(
-                WaxyVision.id("chains"),
-                List.of(
-                        Blocks.COPPER_CHAIN.waxed(),
-                        Blocks.COPPER_CHAIN.waxedExposed(),
-                        Blocks.COPPER_CHAIN.waxedWeathered(),
-                        Blocks.COPPER_CHAIN.waxedOxidized()
-                )
-        ));
-        biConsumer.accept(WaxyVision.id("lantern"), new OverlayModels.UnbakedEntry(
-                WaxyVision.id("lantern"),
-                List.of(
-                        Blocks.COPPER_LANTERN.waxed(),
-                        Blocks.COPPER_LANTERN.waxedExposed(),
-                        Blocks.COPPER_LANTERN.waxedWeathered(),
-                        Blocks.COPPER_LANTERN.waxedOxidized()
-                )
-        ));
+        register(biConsumer, FakeBlocks.CUBE,
+                Blocks.WAXED_COPPER_BLOCK,
+                Blocks.WAXED_CUT_COPPER,
+                Blocks.WAXED_COPPER_GRATE,
+                Blocks.WAXED_COPPER_BULB,
+                Blocks.WAXED_EXPOSED_COPPER,
+                Blocks.WAXED_EXPOSED_CUT_COPPER,
+                Blocks.WAXED_EXPOSED_COPPER_GRATE,
+                Blocks.WAXED_EXPOSED_COPPER_BULB,
+                Blocks.WAXED_WEATHERED_COPPER,
+                Blocks.WAXED_WEATHERED_CUT_COPPER,
+                Blocks.WAXED_WEATHERED_COPPER_GRATE,
+                Blocks.WAXED_WEATHERED_COPPER_BULB,
+                Blocks.WAXED_OXIDIZED_COPPER,
+                Blocks.WAXED_OXIDIZED_CUT_COPPER,
+                Blocks.WAXED_OXIDIZED_COPPER_GRATE,
+                Blocks.WAXED_OXIDIZED_COPPER_BULB
+        );
+        register(biConsumer, FakeBlocks.STAIRS,
+                Blocks.WAXED_CUT_COPPER_STAIRS,
+                Blocks.WAXED_EXPOSED_CUT_COPPER_STAIRS,
+                Blocks.WAXED_WEATHERED_CUT_COPPER_STAIRS,
+                Blocks.WAXED_OXIDIZED_CUT_COPPER_STAIRS
+        );
+        register(biConsumer, FakeBlocks.SLAB,
+                Blocks.WAXED_CUT_COPPER_SLAB,
+                Blocks.WAXED_EXPOSED_CUT_COPPER_SLAB,
+                Blocks.WAXED_WEATHERED_CUT_COPPER_SLAB,
+                Blocks.WAXED_OXIDIZED_CUT_COPPER_SLAB
+        );
+        register(biConsumer, FakeBlocks.DOOR,
+                Blocks.WAXED_COPPER_DOOR,
+                Blocks.WAXED_EXPOSED_COPPER_DOOR,
+                Blocks.WAXED_WEATHERED_COPPER_DOOR,
+                Blocks.WAXED_OXIDIZED_COPPER_DOOR
+        );
+        register(biConsumer, FakeBlocks.TRAPDOOR,
+                Blocks.WAXED_COPPER_TRAPDOOR,
+                Blocks.WAXED_EXPOSED_COPPER_TRAPDOOR,
+                Blocks.WAXED_WEATHERED_COPPER_TRAPDOOR,
+                Blocks.WAXED_OXIDIZED_COPPER_TRAPDOOR
+        );
+        register(biConsumer, FakeBlocks.CHAIN, waxed(Blocks.COPPER_CHAIN));
+        register(biConsumer, FakeBlocks.LANTERN, waxed(Blocks.COPPER_LANTERN));
+        register(biConsumer, FakeBlocks.BARS, waxed(Blocks.COPPER_BARS));
+        register(biConsumer, FakeBlocks.LIGHTNING_ROD,
+                Blocks.WAXED_LIGHTNING_ROD,
+                Blocks.WAXED_EXPOSED_LIGHTNING_ROD,
+                Blocks.WAXED_WEATHERED_LIGHTNING_ROD,
+                Blocks.WAXED_OXIDIZED_LIGHTNING_ROD
+        );
+        register(biConsumer, FakeBlocks.CHEST,
+                Blocks.WAXED_COPPER_CHEST,
+                Blocks.WAXED_EXPOSED_COPPER_CHEST,
+                Blocks.WAXED_WEATHERED_COPPER_CHEST,
+                Blocks.WAXED_OXIDIZED_COPPER_CHEST
+        );
     }
 
     @Override

@@ -1,0 +1,9 @@
+{
+  "blocks": [
+    "minecraft:waxed_lightning_rod",
+    "minecraft:waxed_exposed_lightning_rod",
+    "minecraft:waxed_weathered_lightning_rod",
+    "minecraft:waxed_oxidized_lightning_rod"
+  ],
+  "model": "waxyvision:lightning_rod"
+}

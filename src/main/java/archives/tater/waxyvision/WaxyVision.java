@@ -1,6 +1,6 @@
 package archives.tater.waxyvision;
 
-import archives.tater.waxyvision.datagen.ModelGenerator;
+import archives.tater.waxyvision.datagen.FakeBlocks;
 import archives.tater.waxyvision.mixin.LevelRendererAccessor;
 
 import net.fabricmc.api.ClientModInitializer;
@@ -97,7 +97,7 @@ public class WaxyVision implements ClientModInitializer, ModInitializer {
 	@Override
 	public void onInitialize() {
 		if (System.getProperty("fabric-api.datagen") != null) {
-			ModelGenerator.FakeBlocks.init();
+			FakeBlocks.init();
 		}
 	}
 }

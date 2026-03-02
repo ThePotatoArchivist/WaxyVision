@@ -1,0 +1,22 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"particle": "waxyvision:block/chest",
+		"all": "waxyvision:block/chest"
+	},
+	"elements": [
+		{
+			"from": [0.875, -0.125, 0.875],
+			"to": [15.125, 14.125, 15.125],
+			"faces": {
+				"north": {"uv": [1, 1, 15, 15], "texture": "#all"},
+				"east": {"uv": [1, 1, 15, 15], "texture": "#all"},
+				"south": {"uv": [1, 1, 15, 15], "texture": "#all"},
+				"west": {"uv": [1, 1, 15, 15], "texture": "#all"},
+				"up": {"uv": [1, 1, 15, 15], "texture": "#all"},
+				"down": {"uv": [1, 1, 15, 15], "texture": "#all", "cullface": "down"}
+			}
+		}
+	]
+}

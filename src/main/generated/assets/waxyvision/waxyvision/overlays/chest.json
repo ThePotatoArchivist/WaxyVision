@@ -1,0 +1,9 @@
+{
+  "blocks": [
+    "minecraft:waxed_copper_chest",
+    "minecraft:waxed_exposed_copper_chest",
+    "minecraft:waxed_weathered_copper_chest",
+    "minecraft:waxed_oxidized_copper_chest"
+  ],
+  "model": "waxyvision:chest"
+}

@@ -1,28 +1,47 @@
 package archives.tater.waxyvision.datagen;
 
-import archives.tater.waxyvision.WaxyVision;
+import archives.tater.waxyvision.mixin.BlockModelGeneratorsAccessor;
 
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
-import net.minecraft.client.data.models.model.TexturedModel;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.data.BlockFamilies;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.properties.BlockSetType;
-
-import java.util.function.Function;
+import net.minecraft.world.level.block.Block;
 
 public class ModelGenerator extends FabricModelProvider {
 
     public ModelGenerator(FabricDataOutput output) {
         super(output);
+    }
+
+    private void createBars(BlockModelGenerators blockModelGenerators, Block block, Block sideTexture, Block topTexture) {
+        TextureMapping side = TextureMapping.bars(sideTexture).put(TextureSlot.EDGE, ModelLocationUtils.getModelLocation(topTexture));
+        TextureMapping top = TextureMapping.bars(topTexture);
+        blockModelGenerators.createBars(
+                block,
+                ModelTemplates.BARS_POST_ENDS.create(block, top, blockModelGenerators.modelOutput),
+                ModelTemplates.BARS_POST.create(block, top, blockModelGenerators.modelOutput),
+                ModelTemplates.BARS_CAP.create(block, top, blockModelGenerators.modelOutput),
+                ModelTemplates.BARS_CAP_ALT.create(block, top, blockModelGenerators.modelOutput),
+                ModelTemplates.BARS_POST_SIDE.create(block, side, blockModelGenerators.modelOutput),
+                ModelTemplates.BARS_POST_SIDE_ALT.create(block, side, blockModelGenerators.modelOutput)
+        );
+    }
+
+    private void createLightningRod(BlockModelGenerators blockModelGenerators, Block block) {
+        var variant = BlockModelGenerators.plainVariant(ModelTemplates.LIGHTNING_ROD.create(block, TextureMapping.defaultTexture(block), blockModelGenerators.modelOutput));
+        blockModelGenerators.blockStateOutput
+                .accept(
+                        MultiVariantGenerator.dispatch(block, variant)
+                                .with(BlockModelGeneratorsAccessor.getROTATIONS_COLUMN_WITH_FACING())
+                );
     }
 
     @Override
@@ -36,9 +55,12 @@ public class ModelGenerator extends FabricModelProvider {
         blockModelGenerators.family(family.getBaseBlock())
                 .generateFor(family);
         blockModelGenerators.createAxisAlignedPillarBlockCustomModel(FakeBlocks.CHAIN,
-                BlockModelGenerators.plainVariant(TexturedModel.CHAIN.create(FakeBlocks.CHAIN, blockModelGenerators.modelOutput))
+                BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(FakeBlocks.CHAIN))
         );
         blockModelGenerators.createLantern(FakeBlocks.LANTERN);
+        createBars(blockModelGenerators, FakeBlocks.BARS, FakeBlocks.CUBE, FakeBlocks.BARS);
+        createLightningRod(blockModelGenerators, FakeBlocks.LIGHTNING_ROD);
+        blockModelGenerators.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(FakeBlocks.CHEST, BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(FakeBlocks.CHEST))));
     }
 
     @Override
@@ -46,25 +68,4 @@ public class ModelGenerator extends FabricModelProvider {
 
     }
 
-    public static class FakeBlocks {
-
-        private static Block register(String path, Function<BlockBehaviour.Properties, Block> factory) {
-            var key = ResourceKey.create(Registries.BLOCK, WaxyVision.id(path));
-            var block = factory.apply(BlockBehaviour.Properties.of().setId(key));
-            return Registry.register(BuiltInRegistries.BLOCK, key, block);
-        }
-
-        public static final Block CUBE = register("cube", Block::new);
-        public static final Block STAIRS = register("stairs", properties -> new StairBlock(CUBE.defaultBlockState(), properties));
-        public static final Block SLAB = register("slab", SlabBlock::new);
-        public static final Block DOOR = register("door", properties -> new DoorBlock(BlockSetType.PALE_OAK, properties));
-        public static final Block TRAPDOOR = register("trapdoor", properties -> new TrapDoorBlock(BlockSetType.PALE_OAK, properties));
-        public static final Block CHAIN = register("chain", ChainBlock::new);
-        public static final Block LANTERN = register("lantern", LanternBlock::new);
-        public static final Block BARS = register("bars", LanternBlock::new);
-
-        public static void init() {
-
-        }
-    }
 }
