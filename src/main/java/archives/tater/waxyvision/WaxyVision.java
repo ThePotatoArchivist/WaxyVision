@@ -71,7 +71,10 @@ public class WaxyVision implements ClientModInitializer, ModInitializer {
 					overlayState = copy(overlayState, state, property);
 
 				var overlayModel = loadedModels.models().get(overlayState);
-				if (overlayModel == null) return model;
+				if (overlayModel == null) {
+					LOGGER.error("Could not find model {} from overlay model for {}", overlayEntry.id(), state);
+					return model;
+				}
 
 				return new CompositeBlockstateModelRoot(List.of(
 						model,

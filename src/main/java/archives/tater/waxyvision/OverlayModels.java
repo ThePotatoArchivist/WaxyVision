@@ -34,8 +34,8 @@ public class OverlayModels extends SimplePreparableReloadListener<List<OverlayMo
                     var resource = entry.getValue();
                     try (var reader = resource.openAsReader(); var jsonReader = new JsonReader(reader)) {
                         var result = UnbakedEntry.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseReader(jsonReader));
-                        result.ifError(message -> {
-                            WaxyVision.LOGGER.error("Failed to read {}: {}", entry.getKey(), message);
+                        result.ifError(error -> {
+                            WaxyVision.LOGGER.error("Failed to read overlay model {}: {}", entry.getKey(), error.message());
                         });
                         return result.resultOrPartial().stream();
                     } catch (IOException e) {
