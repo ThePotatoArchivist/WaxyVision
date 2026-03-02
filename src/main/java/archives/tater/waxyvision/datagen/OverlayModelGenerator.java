@@ -70,6 +70,15 @@ public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels
                         Blocks.WAXED_OXIDIZED_COPPER_DOOR
                 )
         ));
+        biConsumer.accept(WaxyVision.id("trapdoor"), new OverlayModels.UnbakedEntry(
+                WaxyVision.id("trapdoor"),
+                List.of(
+                        Blocks.WAXED_COPPER_TRAPDOOR,
+                        Blocks.WAXED_EXPOSED_COPPER_TRAPDOOR,
+                        Blocks.WAXED_WEATHERED_COPPER_TRAPDOOR,
+                        Blocks.WAXED_OXIDIZED_COPPER_TRAPDOOR
+                )
+        ));
     }
 
     @Override

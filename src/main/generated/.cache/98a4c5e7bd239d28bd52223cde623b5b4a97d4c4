@@ -3,6 +3,7 @@ b954ddf100c834e524ccdee2313115d88652012d assets/waxyvision/blockstates/cube.json
 d8d014cda7dca79d9be05278b624cc2a75957435 assets/waxyvision/blockstates/door.json
 58cb2313521d43a0f3f71bea35d59ff9a2994671 assets/waxyvision/blockstates/slab.json
 10dc095e28c0e2df671fd1da26cbf49494b05972 assets/waxyvision/blockstates/stairs.json
+e36119453460b254852d488afa96c008862921cc assets/waxyvision/blockstates/trapdoor.json
 061297f0cb1b4e13de1376b40089943a793508e4 assets/waxyvision/models/block/cube.json
 68ac799f093ebf6bf6055590c55ddadc07564a9f assets/waxyvision/models/block/door_bottom_left.json
 503b2f7ca97cf8a88f130a56b5d48979c99c83c0 assets/waxyvision/models/block/door_bottom_left_open.json
@@ -17,3 +18,6 @@ e9381e77ac37633d073b0a34949c831c35d1c0b0 assets/waxyvision/models/block/door_top
 dcaa25af89739289fdcdcbb9e2f140149a548a5b assets/waxyvision/models/block/stairs.json
 b645d647178eee80efa80f24445d5f6b0a43fd14 assets/waxyvision/models/block/stairs_inner.json
 b73a0efd741384c12be0bd5c07ac55cc9b07bf26 assets/waxyvision/models/block/stairs_outer.json
+912187a3c7fe0b9438c92c8ae9cdb22209c7c819 assets/waxyvision/models/block/trapdoor_bottom.json
+16bc9074786bb438185f01f93e6fb3147ba38c07 assets/waxyvision/models/block/trapdoor_open.json
+bed2088234948cf58013f654d379c1aafd0cdcd6 assets/waxyvision/models/block/trapdoor_top.json
