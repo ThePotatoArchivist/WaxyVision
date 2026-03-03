@@ -25,7 +25,7 @@ public class ModelManagerMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/BlockStateModelLoader;loadBlockStates(Lnet/minecraft/server/packs/resources/ResourceManager;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;")
     )
     private CompletableFuture<BlockStateModelLoader.LoadedModels> saveModels(ResourceManager resourceManager, Executor executor, Operation<CompletableFuture<BlockStateModelLoader.LoadedModels>> original, @Local(argsOnly = true) PreparableReloadListener.PreparationBarrier preparationBarrier) {
-        return preparationBarrier.wait(Unit.INSTANCE)
+        return preparationBarrier.wait(Unit.INSTANCE) // Does this cause problems? Needs more testing
                 .thenComposeAsync(ignored -> original.call(resourceManager, executor))
                 .thenApply(models -> {
                     WaxyVision.loadedModels = models;

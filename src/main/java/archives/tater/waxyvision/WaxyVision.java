@@ -2,6 +2,8 @@ package archives.tater.waxyvision;
 
 import archives.tater.waxyvision.datagen.FakeBlocks;
 import archives.tater.waxyvision.mixin.LevelRendererAccessor;
+import archives.tater.waxyvision.model.CompositeBlockstateModelRoot;
+import archives.tater.waxyvision.model.OverlayBlockStateModel;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;

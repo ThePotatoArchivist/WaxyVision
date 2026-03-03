@@ -1,4 +1,6 @@
-package archives.tater.waxyvision;
+package archives.tater.waxyvision.model;
+
+import archives.tater.waxyvision.WaxyVision;
 
 import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;

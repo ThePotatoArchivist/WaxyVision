@@ -1,4 +1,4 @@
-package archives.tater.waxyvision;
+package archives.tater.waxyvision.model;
 
 import net.fabricmc.fabric.api.client.model.loading.v1.CompositeBlockStateModel;
 
