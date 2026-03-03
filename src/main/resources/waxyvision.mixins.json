@@ -5,7 +5,7 @@
   "mixins": [
     "datagen.BlockModelGeneratorsAccessor",
     "sync.CopperGolemMixin",
-    "sync.SignMixin"
+    "sync.SignBlockEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -14,6 +14,7 @@
     "requireAnnotations": true
   },
   "client": [
+    "AbstractSignRendererMixin",
     "CopperGolemRendererMixin",
     "CopperGolemStatueBlockRendererMixin",
     "ItemBlockRenderTypesMixin",

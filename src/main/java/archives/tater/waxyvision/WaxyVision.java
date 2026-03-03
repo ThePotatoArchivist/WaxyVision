@@ -14,8 +14,10 @@ import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.CopperGolemRenderer;
 import net.minecraft.client.resources.model.BlockStateModelLoader;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.InteractionHand;
@@ -45,6 +47,8 @@ public class WaxyVision implements ClientModInitializer {
 	public static boolean showOverlay = false;
 
 	public static final Identifier COPPER_GOLEM_OVERLAY = id("textures/entity/copper_golem.png");
+	public static final Material SIGN_OVERLAY = new Material(Sheets.SIGN_SHEET, id("entity/signs/sign"));
+	public static final Material HANGING_SIGN_OVERLAY = new Material(Sheets.SIGN_SHEET, id("entity/signs/hanging_sign"));
 
 	public static final Identifier OVERLAY_MODELS_KEY = id("overlay_models");
 	public static final OverlayModels overlayModels = new OverlayModels();

@@ -20,6 +20,6 @@ public class CopperGolemRendererMixin {
             at = @At("TAIL")
     )
     private void extractWaxed(CopperGolem copperGolem, CopperGolemRenderState copperGolemRenderState, float f, CallbackInfo ci) {
-        copperGolemRenderState.setData(WaxyVision.WAXED, copperGolem.hasAttached(WaxyVisionCommon.WAXED));
+        copperGolemRenderState.setData(WaxyVision.WAXED, WaxyVision.showOverlay && copperGolem.hasAttached(WaxyVisionCommon.WAXED));
     }
 }

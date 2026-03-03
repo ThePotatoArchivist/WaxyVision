@@ -20,7 +20,7 @@ public class CopperGolemWaxLayer extends RenderLayer<CopperGolemRenderState, Cop
 
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, CopperGolemRenderState renderState, float yRot, float xRot) {
-        if (!WaxyVision.showOverlay || !renderState.getDataOrDefault(WaxyVision.WAXED, false)) return;
+        if (!renderState.getDataOrDefault(WaxyVision.WAXED, false)) return;
         nodeCollector.order(1).submitModel(
                 getParentModel(),
                 renderState,

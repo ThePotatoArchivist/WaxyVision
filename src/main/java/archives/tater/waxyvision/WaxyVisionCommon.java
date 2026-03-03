@@ -7,12 +7,14 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.util.Unit;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 
 @SuppressWarnings("UnstableApiUsage")
 public class WaxyVisionCommon implements ModInitializer {
@@ -40,5 +42,10 @@ public class WaxyVisionCommon implements ModInitializer {
             FakeBlocks.init();
 
         PayloadTypeRegistry.playS2C().register(DUMMY, StreamCodec.unit(DUMMY_INSTANCE));
+
+        ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, serverLevel) -> {
+            if (blockEntity instanceof SignBlockEntity signBlockEntity)
+                WaxyVisionCommon.setWaxed(signBlockEntity, signBlockEntity.isWaxed());
+        });
     }
 }
