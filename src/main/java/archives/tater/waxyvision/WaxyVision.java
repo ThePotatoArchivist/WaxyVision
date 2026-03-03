@@ -1,18 +1,20 @@
 package archives.tater.waxyvision;
 
-import archives.tater.waxyvision.datagen.FakeBlocks;
 import archives.tater.waxyvision.mixin.LevelRendererAccessor;
 import archives.tater.waxyvision.model.CompositeBlockstateModelRoot;
 import archives.tater.waxyvision.model.OverlayBlockStateModel;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.CopperGolemRenderer;
 import net.minecraft.client.resources.model.BlockStateModelLoader;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
@@ -29,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.List;
 
-public class WaxyVision implements ClientModInitializer, ModInitializer {
+public class WaxyVision implements ClientModInitializer {
 	public static final String MOD_ID = "waxyvision";
 	public static Identifier id(String path) {
 		return Identifier.fromNamespaceAndPath(MOD_ID, path);
@@ -46,6 +48,8 @@ public class WaxyVision implements ClientModInitializer, ModInitializer {
 
 	public static final Identifier OVERLAY_MODELS_KEY = id("overlay_models");
 	public static final OverlayModels overlayModels = new OverlayModels();
+
+	public static final RenderStateDataKey<Boolean> WAXED = RenderStateDataKey.create(() -> MOD_ID + ":waxed");
 
 	@ApiStatus.Internal
 	@Nullable
@@ -97,12 +101,12 @@ public class WaxyVision implements ClientModInitializer, ModInitializer {
                     section.setDirty(false);
 			}
 		});
-	}
 
-	@Override
-	public void onInitialize() {
-		if (System.getProperty("fabric-api.datagen") != null) {
-			FakeBlocks.init();
-		}
+		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+			if (entityRenderer instanceof CopperGolemRenderer copperGolemRenderer)
+				registrationHelper.register(new CopperGolemWaxLayer(copperGolemRenderer));
+		});
+
+		ClientPlayNetworking.registerGlobalReceiver(WaxyVisionCommon.DUMMY, (payload, context) -> {});
 	}
 }

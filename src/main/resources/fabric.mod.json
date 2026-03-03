@@ -19,7 +19,7 @@
 			"archives.tater.waxyvision.WaxyVision"
 		],
 		"main": [
-			"archives.tater.waxyvision.WaxyVision"
+			"archives.tater.waxyvision.WaxyVisionCommon"
 		],
 		"fabric-datagen": [
 			"archives.tater.waxyvision.WaxyVisionDataGenerator"
