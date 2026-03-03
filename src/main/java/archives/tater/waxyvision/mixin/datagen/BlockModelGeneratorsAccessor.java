@@ -1,4 +1,4 @@
-package archives.tater.waxyvision.mixin;
+package archives.tater.waxyvision.mixin.datagen;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;

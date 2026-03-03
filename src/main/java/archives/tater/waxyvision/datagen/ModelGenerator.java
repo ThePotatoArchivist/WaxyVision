@@ -1,6 +1,6 @@
 package archives.tater.waxyvision.datagen;
 
-import archives.tater.waxyvision.mixin.BlockModelGeneratorsAccessor;
+import archives.tater.waxyvision.mixin.datagen.BlockModelGeneratorsAccessor;
 
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;

@@ -18,7 +18,7 @@ public class ItemBlockRenderTypesMixin {
             at = @At("RETURN")
     )
     private static ChunkSectionLayer modifyRenderType(ChunkSectionLayer original, BlockState state) {
-        return WaxyVision.overlayModels.getEntry(state.getBlock()) != null && original == ChunkSectionLayer.SOLID
+        return WaxyVision.showOverlay && WaxyVision.overlayModels.getEntry(state.getBlock()) != null && original == ChunkSectionLayer.SOLID
                 ? ChunkSectionLayer.CUTOUT
                 : original;
     }
@@ -29,7 +29,7 @@ public class ItemBlockRenderTypesMixin {
             at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;")
     )
     private static <V> V modifyRenderType(V original, BlockState state) {
-        return WaxyVision.overlayModels.getEntry(state.getBlock()) != null && original == ChunkSectionLayer.SOLID
+        return WaxyVision.showOverlay && WaxyVision.overlayModels.getEntry(state.getBlock()) != null && original == ChunkSectionLayer.SOLID
                 ? (V) ChunkSectionLayer.CUTOUT
                 : original;
     }

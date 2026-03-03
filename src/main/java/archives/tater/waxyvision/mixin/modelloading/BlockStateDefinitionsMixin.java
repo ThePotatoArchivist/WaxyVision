@@ -1,4 +1,4 @@
-package archives.tater.waxyvision.mixin;
+package archives.tater.waxyvision.mixin.modelloading;
 
 import archives.tater.waxyvision.WaxyVision;
 

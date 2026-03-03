@@ -1,4 +1,4 @@
-package archives.tater.waxyvision.mixin;
+package archives.tater.waxyvision.mixin.datagen;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import org.spongepowered.asm.mixin.Mixin;

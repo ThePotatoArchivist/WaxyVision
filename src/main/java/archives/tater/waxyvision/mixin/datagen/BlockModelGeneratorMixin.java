@@ -1,4 +1,4 @@
-package archives.tater.waxyvision.mixin;
+package archives.tater.waxyvision.mixin.datagen;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
