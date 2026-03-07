@@ -1,6 +1,5 @@
 package archives.tater.waxyvision;
 
-import archives.tater.waxyvision.mixin.LevelRendererAccessor;
 import archives.tater.waxyvision.model.CompositeBlockstateModelRoot;
 import archives.tater.waxyvision.model.OverlayBlockStateModel;
 
@@ -17,6 +16,7 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.CopperGolemRenderer;
 import net.minecraft.client.resources.model.BlockStateModelLoader;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.SectionPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.InteractionHand;
@@ -100,8 +100,20 @@ public class WaxyVision implements ClientModInitializer {
 					.anyMatch(hand -> player.getItemInHand(hand).is(Items.HONEYCOMB));
 			if (showOverlay != newShowOverlay) {
 				showOverlay = newShowOverlay;
-				for (var section : ((LevelRendererAccessor) Minecraft.getInstance().levelRenderer).getViewArea().sections)
-                    section.setDirty(false);
+
+				// Rerender all chinks
+
+				var cameraSectionPos = SectionPos.of(Minecraft.getInstance().gameRenderer.getMainCamera().position());
+				var viewDistance = Minecraft.getInstance().options.getEffectiveRenderDistance();
+
+				clientLevel.setSectionRangeDirty(
+						clientLevel.getMinSectionY(),
+						cameraSectionPos.x() - viewDistance,
+						cameraSectionPos.z() - viewDistance,
+						clientLevel.getMaxSectionY(),
+						cameraSectionPos.x() + viewDistance,
+						cameraSectionPos.z() + viewDistance
+				);
 			}
 		});
 

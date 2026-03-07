@@ -16,7 +16,6 @@
     "CopperGolemRendererMixin",
     "CopperGolemStatueBlockRendererMixin",
     "ItemBlockRenderTypesMixin",
-    "LevelRendererAccessor",
     "datagen.BlockModelGeneratorMixin",
     "datagen.ModelProviderMixin",
     "modelloading.BlockStateDefinitionsMixin",
