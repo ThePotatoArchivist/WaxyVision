@@ -7,7 +7,6 @@ import archives.tater.waxyvision.model.OverlayBlockStateModel;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
@@ -110,7 +109,5 @@ public class WaxyVision implements ClientModInitializer {
 			if (entityRenderer instanceof CopperGolemRenderer copperGolemRenderer)
 				registrationHelper.register(new CopperGolemWaxLayer(copperGolemRenderer));
 		});
-
-		ClientPlayNetworking.registerGlobalReceiver(WaxyVisionCommon.DUMMY, (payload, context) -> {});
 	}
 }
