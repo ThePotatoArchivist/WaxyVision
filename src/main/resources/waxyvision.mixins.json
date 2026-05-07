@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "datagen.BlockModelGeneratorsAccessor",
-    "sync.CopperGolemMixin"
+    "sync.CopperGolemMixin",
+    "sync.SignBlockEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -13,12 +14,12 @@
     "requireAnnotations": true
   },
   "client": [
-    "rendering.AbstractSignRendererMixin",
-    "rendering.CopperGolemRendererMixin",
-    "rendering.CopperGolemStatueBlockRendererMixin",
     "datagen.BlockModelGeneratorMixin",
     "datagen.ModelProviderMixin",
     "modelloading.BlockStateDefinitionsMixin",
-    "modelloading.ModelManagerMixin"
+    "modelloading.ModelManagerMixin",
+    "rendering.AbstractSignRendererMixin",
+    "rendering.CopperGolemRendererMixin",
+    "rendering.CopperGolemStatueBlockRendererMixin"
   ]
 }

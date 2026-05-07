@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.CopperGolemRenderer;
 import net.minecraft.client.resources.model.BlockStateModelLoader;
@@ -62,6 +63,20 @@ public class WaxyVision implements ClientModInitializer {
 		return target.setValue(property, source.getValue(property));
 	}
 
+	private static void rerenderAllChunks(ClientLevel clientLevel) {
+		var cameraSectionPos = SectionPos.of(Minecraft.getInstance().gameRenderer.getMainCamera().position());
+		var viewDistance = Minecraft.getInstance().options.getEffectiveRenderDistance();
+
+		clientLevel.setSectionRangeDirty(
+				clientLevel.getMinSectionY(),
+				cameraSectionPos.x() - viewDistance,
+				cameraSectionPos.z() - viewDistance,
+				clientLevel.getMaxSectionY(),
+				cameraSectionPos.x() + viewDistance,
+				cameraSectionPos.z() + viewDistance
+		);
+	}
+
 	@Override
 	public void onInitializeClient() {
 		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(OVERLAY_MODELS_KEY, overlayModels);
@@ -101,19 +116,7 @@ public class WaxyVision implements ClientModInitializer {
 			if (showOverlay != newShowOverlay) {
 				showOverlay = newShowOverlay;
 
-				// Rerender all chinks
-
-				var cameraSectionPos = SectionPos.of(Minecraft.getInstance().gameRenderer.getMainCamera().position());
-				var viewDistance = Minecraft.getInstance().options.getEffectiveRenderDistance();
-
-				clientLevel.setSectionRangeDirty(
-						clientLevel.getMinSectionY(),
-						cameraSectionPos.x() - viewDistance,
-						cameraSectionPos.z() - viewDistance,
-						clientLevel.getMaxSectionY(),
-						cameraSectionPos.x() + viewDistance,
-						cameraSectionPos.z() + viewDistance
-				);
+				rerenderAllChunks(clientLevel);
 			}
 		});
 
