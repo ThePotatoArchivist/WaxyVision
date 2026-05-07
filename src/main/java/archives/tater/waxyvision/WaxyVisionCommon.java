@@ -10,7 +10,6 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 
 import net.minecraft.util.Unit;
 
-@SuppressWarnings("UnstableApiUsage")
 public class WaxyVisionCommon implements ModInitializer {
 
     public static final AttachmentType<Unit> WAXED = AttachmentRegistry.create(WaxyVision.id("waxed"), builder -> builder

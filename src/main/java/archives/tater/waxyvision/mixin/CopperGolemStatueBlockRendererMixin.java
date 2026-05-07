@@ -15,8 +15,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.CopperGolemStatueBlockRenderer;
 import net.minecraft.client.renderer.blockentity.state.CopperGolemStatueRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.entity.CopperGolemStatueBlockEntity;
 import net.minecraft.world.phys.Vec3;
@@ -34,12 +33,12 @@ public class CopperGolemStatueBlockRendererMixin {
     }
 
     @WrapOperation(
-            method = "submit(Lnet/minecraft/client/renderer/blockentity/state/CopperGolemStatueRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V")
+            method = "submit(Lnet/minecraft/client/renderer/blockentity/state/CopperGolemStatueRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/resources/Identifier;IIILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V")
     )
-    private <S> void renderOverlay(SubmitNodeCollector instance, Model<? super S> model, S renderState, PoseStack poseStack, RenderType renderType, int packedLight, int packedOverlay, int outlineColor, ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay, Operation<Void> original, CopperGolemStatueRenderState statueRenderState) {
-        original.call(instance, model, renderState, poseStack, renderType, packedLight, packedOverlay, outlineColor, crumblingOverlay);
+    private <S> void renderOverlay(SubmitNodeCollector instance, Model<? super S> model, S state, PoseStack poseStack, Identifier texture, int packedLight, int packedOverlay, int outlineColor, ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay, Operation<Void> original, CopperGolemStatueRenderState statueRenderState) {
+        original.call(instance, model, state, poseStack, texture, packedLight, packedOverlay, outlineColor, crumblingOverlay);
         if (!statueRenderState.getDataOrDefault(WaxyVision.WAXED, false)) return;
-        instance.order(1).submitModel(model, renderState, poseStack, RenderTypes.entityCutoutNoCull(WaxyVision.COPPER_GOLEM_OVERLAY), packedLight, packedOverlay, outlineColor, crumblingOverlay);
+        instance.order(1).submitModel(model, state, poseStack, WaxyVision.COPPER_GOLEM_OVERLAY, packedLight, packedOverlay, outlineColor, crumblingOverlay);
     }
 }

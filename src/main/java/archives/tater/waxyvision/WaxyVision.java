@@ -6,7 +6,7 @@ import archives.tater.waxyvision.model.OverlayBlockStateModel;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
@@ -15,7 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.CopperGolemRenderer;
 import net.minecraft.client.resources.model.BlockStateModelLoader;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.SectionPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
@@ -46,8 +46,8 @@ public class WaxyVision implements ClientModInitializer {
 	public static boolean showOverlay = false;
 
 	public static final Identifier COPPER_GOLEM_OVERLAY = id("textures/entity/copper_golem.png");
-	public static final Material SIGN_OVERLAY = new Material(Sheets.SIGN_SHEET, id("entity/signs/sign"));
-	public static final Material HANGING_SIGN_OVERLAY = new Material(Sheets.SIGN_SHEET, id("entity/signs/hanging_sign"));
+	public static final SpriteId SIGN_OVERLAY = new SpriteId(Sheets.SIGN_SHEET, id("entity/signs/sign"));
+	public static final SpriteId HANGING_SIGN_OVERLAY = new SpriteId(Sheets.SIGN_SHEET, id("entity/signs/hanging_sign"));
 
 	public static final Identifier OVERLAY_MODELS_KEY = id("overlay_models");
 	public static final OverlayModels overlayModels = new OverlayModels();
@@ -64,8 +64,8 @@ public class WaxyVision implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(OVERLAY_MODELS_KEY, overlayModels);
-		ResourceLoader.get(PackType.CLIENT_RESOURCES).addReloaderOrdering(OVERLAY_MODELS_KEY, ResourceReloaderKeys.Client.MODELS);
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(OVERLAY_MODELS_KEY, overlayModels);
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).addListenerOrdering(OVERLAY_MODELS_KEY, ResourceReloaderKeys.Client.MODELS);
 
 		ModelLoadingPlugin.register(pluginContext -> {
 			pluginContext.modifyBlockModelOnLoad().register((model, context) -> {
@@ -92,7 +92,7 @@ public class WaxyVision implements ClientModInitializer {
 			});
 		});
 
-		ClientTickEvents.START_WORLD_TICK.register(clientLevel -> {
+		ClientTickEvents.START_LEVEL_TICK.register(clientLevel -> {
 			var player = Minecraft.getInstance().player;
 			if (player == null) return;
 
@@ -117,7 +117,7 @@ public class WaxyVision implements ClientModInitializer {
 			}
 		});
 
-		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+		LivingEntityRenderLayerRegistrationCallback.EVENT.register((_, entityRenderer, registrationHelper, _) -> {
 			if (entityRenderer instanceof CopperGolemRenderer copperGolemRenderer)
 				registrationHelper.register(new CopperGolemWaxLayer(copperGolemRenderer));
 		});

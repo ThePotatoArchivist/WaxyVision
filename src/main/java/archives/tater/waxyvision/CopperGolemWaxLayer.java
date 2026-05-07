@@ -6,13 +6,9 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.CopperGolemRenderState;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
 public class CopperGolemWaxLayer extends RenderLayer<CopperGolemRenderState, CopperGolemModel> {
-
-    private static final RenderType RENDER_TYPE = RenderTypes.entityCutoutNoCull(WaxyVision.COPPER_GOLEM_OVERLAY);
 
     public CopperGolemWaxLayer(RenderLayerParent<CopperGolemRenderState, CopperGolemModel> renderer) {
         super(renderer);
@@ -25,7 +21,7 @@ public class CopperGolemWaxLayer extends RenderLayer<CopperGolemRenderState, Cop
                 getParentModel(),
                 renderState,
                 poseStack,
-                RENDER_TYPE,
+                WaxyVision.COPPER_GOLEM_OVERLAY,
                 packedLight,
                 OverlayTexture.NO_OVERLAY,
                 renderState.outlineColor,

@@ -3,7 +3,7 @@ package archives.tater.waxyvision.datagen;
 import archives.tater.waxyvision.mixin.datagen.BlockModelGeneratorsAccessor;
 
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
@@ -17,12 +17,12 @@ import net.minecraft.world.level.block.Block;
 
 public class ModelGenerator extends FabricModelProvider {
 
-    public ModelGenerator(FabricDataOutput output) {
+    public ModelGenerator(FabricPackOutput output) {
         super(output);
     }
 
     private void createBars(BlockModelGenerators blockModelGenerators, Block block, Block sideTexture, Block topTexture) {
-        TextureMapping side = TextureMapping.bars(sideTexture).put(TextureSlot.EDGE, ModelLocationUtils.getModelLocation(topTexture));
+        TextureMapping side = TextureMapping.bars(sideTexture).put(TextureSlot.EDGE, TextureMapping.getBlockTexture(topTexture));
         TextureMapping top = TextureMapping.bars(topTexture);
         blockModelGenerators.createBars(
                 block,

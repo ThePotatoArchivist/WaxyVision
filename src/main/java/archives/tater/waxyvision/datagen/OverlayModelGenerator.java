@@ -2,7 +2,7 @@ package archives.tater.waxyvision.datagen;
 
 import archives.tater.waxyvision.OverlayModels;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
 
 import net.minecraft.core.HolderLookup;
@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels.UnbakedEntry> {
-    public OverlayModelGenerator(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+    public OverlayModelGenerator(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(dataOutput, registriesFuture, PackOutput.Target.RESOURCE_PACK, OverlayModels.PATH, OverlayModels.UnbakedEntry.CODEC);
     }
 

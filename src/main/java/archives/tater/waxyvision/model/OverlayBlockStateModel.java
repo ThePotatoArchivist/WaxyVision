@@ -3,16 +3,16 @@ package archives.tater.waxyvision.model;
 import archives.tater.waxyvision.WaxyVision;
 
 import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadEmitter;
 
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.jspecify.annotations.Nullable;
@@ -30,14 +30,9 @@ public class OverlayBlockStateModel extends WrapperBlockStateModel {
     }
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(RandomSource random, List<BlockStateModelPart> parts) {
         if (shouldShow())
             super.collectParts(random, parts);
-    }
-
-    @Override
-    public List<BlockModelPart> collectParts(RandomSource random) {
-        return shouldShow() ? List.of() : super.collectParts(random);
     }
 
     @Override
@@ -54,8 +49,8 @@ public class OverlayBlockStateModel extends WrapperBlockStateModel {
     }
 
     @Override
-    public TextureAtlasSprite particleSprite(BlockAndTintGetter blockView, BlockPos pos, BlockState state) {
-        return super.particleSprite(blockView, pos, state);
+    public Material.Baked particleMaterial(BlockAndTintGetter level, BlockPos pos, BlockState state) {
+        return super.particleMaterial(level, pos, state);
     }
 
     public record Unbaked(BlockStateModel.UnbakedRoot wrapped) implements BlockStateModel.UnbakedRoot {
