@@ -13,9 +13,9 @@
     "requireAnnotations": true
   },
   "client": [
-    "AbstractSignRendererMixin",
-    "CopperGolemRendererMixin",
-    "CopperGolemStatueBlockRendererMixin",
+    "rendering.AbstractSignRendererMixin",
+    "rendering.CopperGolemRendererMixin",
+    "rendering.CopperGolemStatueBlockRendererMixin",
     "datagen.BlockModelGeneratorMixin",
     "datagen.ModelProviderMixin",
     "modelloading.BlockStateDefinitionsMixin",

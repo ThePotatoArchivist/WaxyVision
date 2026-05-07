@@ -3,11 +3,11 @@ package archives.tater.waxyvision;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.util.Unit;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,19 +18,25 @@ import com.google.gson.stream.JsonReader;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class OverlayModels extends SimplePreparableReloadListener<List<OverlayModels.UnbakedEntry>> {
+public class OverlayModels implements PreparableReloadListener {
     public static final String PATH = "waxyvision/overlays";
-    private final List<Entry> entries = new ArrayList<>();
+    private List<Entry> entries = List.of();
     private final Map<Block, Entry> overlays = new IdentityHashMap<>();
 
     @Override
-    protected List<UnbakedEntry> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
-        return resourceManager.listResources(PATH, id -> true).entrySet()
-                .stream().flatMap(entry -> {
+    public CompletableFuture<Void> reload(SharedState currentReload, Executor taskExecutor, PreparationBarrier preparationBarrier, Executor reloadExecutor) {
+        overlays.clear();
+        entries = currentReload.resourceManager().listResources(PATH, _ -> true).entrySet().stream()
+                .flatMap(entry -> {
                     var resource = entry.getValue();
                     try (var reader = resource.openAsReader(); var jsonReader = new JsonReader(reader)) {
                         var result = UnbakedEntry.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseReader(jsonReader));
@@ -43,24 +49,23 @@ public class OverlayModels extends SimplePreparableReloadListener<List<OverlayMo
                         return Stream.of();
                     }
                 })
+                .map(unbakedEntry -> {
+                    var builder = new StateDefinition.Builder<Block, BlockState>(Blocks.AIR);
+                    var blocks = unbakedEntry.blocks.stream()
+                            .flatMap(block -> BuiltInRegistries.BLOCK.get(block).stream())
+                            .map(Holder.Reference::value)
+                            .toList();
+                    var properties = blocks.stream().flatMap(block -> block.getStateDefinition().getProperties().stream()).collect(Collectors.toSet());
+                    for (var property : properties)
+                        builder.add(property);
+                    var definition = builder.create(Block::defaultBlockState, BlockState::new);
+                    var entry = new Entry(unbakedEntry.model, definition);
+                    for (var block : blocks)
+                        overlays.put(block, entry);
+                    return entry;
+                })
                 .toList();
-    }
-
-    @Override
-    protected void apply(List<UnbakedEntry> object, ResourceManager resourceManager, ProfilerFiller profiler) {
-        overlays.clear();
-        entries.clear();
-        object.forEach(unbakedEntry -> {
-            var builder = new StateDefinition.Builder<Block, BlockState>(Blocks.AIR);
-            var properties = unbakedEntry.blocks.stream().flatMap(block -> block.getStateDefinition().getProperties().stream()).collect(Collectors.toSet());
-            for (var property : properties)
-                builder.add(property);
-            var definition = builder.create(Block::defaultBlockState, BlockState::new);
-            var entry = new Entry(unbakedEntry.model, definition);
-            entries.add(entry);
-            for (var block : unbakedEntry.blocks)
-                overlays.put(block, entry);
-        });
+        return preparationBarrier.wait(Unit.INSTANCE).thenAccept(_ -> {});
     }
 
     public @Nullable Entry getEntry(Block block) {
@@ -71,10 +76,10 @@ public class OverlayModels extends SimplePreparableReloadListener<List<OverlayMo
         return entries;
     }
 
-    public record UnbakedEntry(Identifier model, List<Block> blocks) {
+    public record UnbakedEntry(Identifier model, List<Identifier> blocks) {
         public static final Codec<UnbakedEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Identifier.CODEC.fieldOf("model").forGetter(UnbakedEntry::model),
-                BuiltInRegistries.BLOCK.byNameCodec().listOf().fieldOf("blocks").forGetter(UnbakedEntry::blocks)
+                Identifier.CODEC.listOf().fieldOf("blocks").forGetter(UnbakedEntry::blocks)
         ).apply(instance, UnbakedEntry::new));
     }
 
