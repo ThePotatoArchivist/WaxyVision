@@ -23,6 +23,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.Property;
 
 import org.jetbrains.annotations.ApiStatus;
@@ -49,6 +50,9 @@ public class WaxyVision implements ClientModInitializer {
 	public static final Identifier COPPER_GOLEM_OVERLAY = id("textures/entity/copper_golem.png");
 	public static final SpriteId SIGN_OVERLAY = new SpriteId(Sheets.SIGN_SHEET, id("entity/signs/sign"));
 	public static final SpriteId HANGING_SIGN_OVERLAY = new SpriteId(Sheets.SIGN_SHEET, id("entity/signs/hanging_sign"));
+	public static final SpriteId CHEST_OVERLAY_SINGLE = new SpriteId(Sheets.CHEST_SHEET, id("entity/chest/single"));
+	public static final SpriteId CHEST_OVERLAY_RIGHT = new SpriteId(Sheets.CHEST_SHEET, id("entity/chest/left"));
+	public static final SpriteId CHEST_OVERLAY_LEFT = new SpriteId(Sheets.CHEST_SHEET, id("entity/chest/right"));
 
 	public static final Identifier OVERLAY_MODELS_KEY = id("overlay_models");
 	public static final OverlayModels overlayModels = new OverlayModels();
@@ -58,6 +62,14 @@ public class WaxyVision implements ClientModInitializer {
 	@ApiStatus.Internal
 	@Nullable
 	public static BlockStateModelLoader.LoadedModels loadedModels;
+
+	public static SpriteId getChestOverlaySprite(ChestType type) {
+		return switch (type) {
+			case SINGLE -> CHEST_OVERLAY_SINGLE;
+			case LEFT -> CHEST_OVERLAY_LEFT;
+			case RIGHT -> CHEST_OVERLAY_RIGHT;
+		};
+	}
 
 	private static <T extends Comparable<T>> BlockState copy(BlockState target, BlockState source, Property<T> property) {
 		return target.setValue(property, source.getValue(property));

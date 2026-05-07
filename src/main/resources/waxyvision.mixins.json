@@ -19,6 +19,7 @@
     "modelloading.BlockStateDefinitionsMixin",
     "modelloading.ModelManagerMixin",
     "rendering.AbstractSignRendererMixin",
+    "rendering.ChestRendererMixin",
     "rendering.CopperGolemRendererMixin",
     "rendering.CopperGolemStatueBlockRendererMixin"
   ]

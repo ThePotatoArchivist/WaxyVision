@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/outer_stairs",
-  "textures": {
-    "bottom": "waxyvision:block/outline",
-    "side": "waxyvision:block/outline",
-    "top": "waxyvision:block/outline"
-  }
-}

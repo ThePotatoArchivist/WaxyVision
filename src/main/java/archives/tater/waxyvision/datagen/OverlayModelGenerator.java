@@ -102,12 +102,6 @@ public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels
                 Blocks.WAXED_WEATHERED_LIGHTNING_ROD,
                 Blocks.WAXED_OXIDIZED_LIGHTNING_ROD
         );
-        register(biConsumer, FakeBlocks.CHEST,
-                Blocks.WAXED_COPPER_CHEST,
-                Blocks.WAXED_EXPOSED_COPPER_CHEST,
-                Blocks.WAXED_WEATHERED_COPPER_CHEST,
-                Blocks.WAXED_OXIDIZED_COPPER_CHEST
-        );
     }
 
     @Override

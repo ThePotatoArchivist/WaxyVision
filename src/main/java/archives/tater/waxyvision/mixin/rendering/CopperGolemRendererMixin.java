@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.entity.CopperGolemRenderer;
 import net.minecraft.client.renderer.entity.state.CopperGolemRenderState;
 import net.minecraft.world.entity.animal.golem.CopperGolem;
 
-@SuppressWarnings("UnstableApiUsage")
 @Mixin(CopperGolemRenderer.class)
 public class CopperGolemRendererMixin {
     @Inject(
