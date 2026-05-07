@@ -24,21 +24,4 @@ public class BlockStateDefinitionsMixin {
         WaxyVision.overlayModels.getEntries().join().forEach(entry -> original.put(entry.id(), entry.definition()));
         return original;
     }
-
-//    @WrapWithCondition(
-//            method = "definitionLocationToBlockStateMapper",
-//            at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;")
-//    )
-//    private static <K, V> boolean prevent(Map<K, V> instance, K k, V v, @Local Block block) {
-//        return WaxyVision.overlayModels.getEntry(block) != null;
-//    }
-
-//    @Inject(
-//            method = "definitionLocationToBlockStateMapper",
-//            at = @At(value = "FIELD", target = "Lnet/minecraft/core/registries/BuiltInRegistries;BLOCK:Lnet/minecraft/core/DefaultedRegistry;"),
-//            cancellable = true
-//    )
-//    private static void earlyReturnNOCOMMIT(CallbackInfoReturnable<Function<Identifier, StateDefinition<Block, BlockState>>> cir, @Local Map<Identifier, StateDefinition<Block, BlockState>> map) {
-//        cir.setReturnValue(map::get);
-//    }
 }

@@ -35,8 +35,8 @@ public class AbstractSignRendererMixin<S extends SignRenderState> {
             method = "extractRenderState(Lnet/minecraft/world/level/block/entity/SignBlockEntity;Lnet/minecraft/client/renderer/blockentity/state/SignRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
             at = @At("TAIL")
     )
-    private void extractWaxed(SignBlockEntity signBlockEntity, SignRenderState signRenderState, float f, Vec3 vec3, ModelFeatureRenderer.CrumblingOverlay crumblingOverlay, CallbackInfo ci) {
-        signRenderState.setData(WaxyVision.WAXED, WaxyVision.showOverlay && signBlockEntity.hasAttached(WaxyVisionCommon.WAXED));
+    private void extractWaxed(SignBlockEntity blockEntity, SignRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.CrumblingOverlay breakProgress, CallbackInfo ci) {
+        state.setData(WaxyVision.WAXED, WaxyVision.showOverlay && blockEntity.hasAttached(WaxyVisionCommon.WAXED));
     }
 
     @Inject(

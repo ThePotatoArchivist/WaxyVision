@@ -18,7 +18,7 @@ public class CopperGolemRendererMixin {
             method = "extractRenderState(Lnet/minecraft/world/entity/animal/golem/CopperGolem;Lnet/minecraft/client/renderer/entity/state/CopperGolemRenderState;F)V",
             at = @At("TAIL")
     )
-    private void extractWaxed(CopperGolem copperGolem, CopperGolemRenderState copperGolemRenderState, float f, CallbackInfo ci) {
-        copperGolemRenderState.setData(WaxyVision.WAXED, WaxyVision.showOverlay && copperGolem.hasAttached(WaxyVisionCommon.WAXED));
+    private void extractWaxed(CopperGolem entity, CopperGolemRenderState state, float partialTicks, CallbackInfo ci) {
+        state.setData(WaxyVision.WAXED, WaxyVision.showOverlay && entity.hasAttached(WaxyVisionCommon.WAXED));
     }
 }

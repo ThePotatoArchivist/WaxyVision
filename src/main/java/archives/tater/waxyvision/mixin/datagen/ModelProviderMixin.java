@@ -15,7 +15,7 @@ public class ModelProviderMixin {
             method = "accept",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/data/models/ModelProvider$ItemInfoCollector;register(Lnet/minecraft/world/item/Item;Lnet/minecraft/client/renderer/item/ClientItem;)V")
     )
-    private boolean skipEmpty(@Coerce Object instance, Item item, ClientItem clientItem) {
+    private boolean skipEmpty(@Coerce Object instance, Item item, ClientItem itemInfo) {
         return item != Items.AIR;
     }
 }
