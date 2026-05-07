@@ -21,7 +21,7 @@ public class BlockStateDefinitionsMixin {
             at = @At(value = "NEW", target = "(Ljava/util/Map;)Ljava/util/HashMap;")
     )
     private static HashMap<Identifier, StateDefinition<Block, BlockState>> addOverlayModels(HashMap<Identifier, StateDefinition<Block, BlockState>> original) {
-        WaxyVision.overlayModels.getEntries().forEach(entry -> original.put(entry.id(), entry.definition()));
+        WaxyVision.overlayModels.getEntries().join().forEach(entry -> original.put(entry.id(), entry.definition()));
         return original;
     }
 

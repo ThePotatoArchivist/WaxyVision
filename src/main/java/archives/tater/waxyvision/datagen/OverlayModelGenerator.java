@@ -32,13 +32,17 @@ public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels
         );
     }
 
-    private static void register(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, List<Block> blocks) {
+    private static void registerRaw(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, List<Identifier> blocks) {
         var id = BuiltInRegistries.BLOCK.getKey(modelBlock);
         consumer.accept(id, new OverlayModels.UnbakedEntry(id, blocks));
     }
 
+    private static void register(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, List<Block> blocks) {
+        registerRaw(consumer, modelBlock, blocks.stream().map(BuiltInRegistries.BLOCK::getKey).toList());
+    }
+
     private static void register(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, Block... blocks) {
-        register(consumer, modelBlock, Arrays.asList(blocks));
+        registerRaw(consumer, modelBlock, Arrays.stream(blocks).map(BuiltInRegistries.BLOCK::getKey).toList());
     }
 
     @Override

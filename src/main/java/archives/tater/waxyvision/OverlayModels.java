@@ -7,7 +7,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.util.Unit;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,20 +28,20 @@ import java.util.stream.Stream;
 
 public class OverlayModels implements PreparableReloadListener {
     public static final String PATH = "waxyvision/overlays";
-    private List<Entry> entries = List.of();
+    private CompletableFuture<List<Entry>> entries = CompletableFuture.completedFuture(List.of());
     private final Map<Block, Entry> overlays = new IdentityHashMap<>();
 
     @Override
     public CompletableFuture<Void> reload(SharedState currentReload, Executor taskExecutor, PreparationBarrier preparationBarrier, Executor reloadExecutor) {
         overlays.clear();
-        entries = currentReload.resourceManager().listResources(PATH, _ -> true).entrySet().stream()
+        entries = CompletableFuture.supplyAsync(() -> currentReload.resourceManager().listResources(PATH, _ -> true).entrySet().stream()
                 .flatMap(entry -> {
                     var resource = entry.getValue();
                     try (var reader = resource.openAsReader(); var jsonReader = new JsonReader(reader)) {
                         var result = UnbakedEntry.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseReader(jsonReader));
-                        result.ifError(error -> {
-                            WaxyVision.LOGGER.error("Failed to read overlay model {}: {}", entry.getKey(), error.message());
-                        });
+                        result.ifError(error ->
+                                WaxyVision.LOGGER.error("Failed to read overlay model {}: {}", entry.getKey(), error.message())
+                        );
                         return result.resultOrPartial().stream();
                     } catch (IOException e) {
                         WaxyVision.LOGGER.error("Failed to read", e);
@@ -64,15 +63,17 @@ public class OverlayModels implements PreparableReloadListener {
                         overlays.put(block, entry);
                     return entry;
                 })
-                .toList();
-        return preparationBarrier.wait(Unit.INSTANCE).thenAccept(_ -> {});
+                .toList(),
+        taskExecutor);
+
+        return entries.thenCompose(preparationBarrier::wait).thenAccept(_ -> {});
     }
 
     public @Nullable Entry getEntry(Block block) {
         return overlays.get(block);
     }
 
-    public Collection<Entry> getEntries() {
+    public CompletableFuture<? extends Collection<Entry>> getEntries() {
         return entries;
     }
 
