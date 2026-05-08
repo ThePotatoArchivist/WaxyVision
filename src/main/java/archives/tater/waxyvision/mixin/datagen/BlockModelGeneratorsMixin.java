@@ -11,7 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 @Mixin(BlockModelGenerators.class)
-public class BlockModelGeneratorMixin {
+public class BlockModelGeneratorsMixin {
 
     @WrapMethod(
             method = "createFlatItemModel(Lnet/minecraft/world/item/Item;)Lnet/minecraft/resources/Identifier;"

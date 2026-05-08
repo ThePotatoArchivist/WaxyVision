@@ -1,6 +1,7 @@
 package archives.tater.waxyvision.mixin.rendering;
 
 import archives.tater.waxyvision.WaxyVision;
+import archives.tater.waxyvision.WaxyVisionBuiltinTextures;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -37,6 +38,6 @@ public class CopperGolemStatueBlockRendererMixin {
     private <S> void renderOverlay(SubmitNodeCollector instance, Model<? super S> model, S state, PoseStack poseStack, Identifier texture, int packedLight, int packedOverlay, int outlineColor, ModelFeatureRenderer.CrumblingOverlay crumblingOverlay, Operation<Void> original, CopperGolemStatueRenderState statueRenderState) {
         original.call(instance, model, state, poseStack, texture, packedLight, packedOverlay, outlineColor, crumblingOverlay);
         if (!statueRenderState.getDataOrDefault(WaxyVision.WAXED, false)) return;
-        instance.order(1).submitModel(model, state, poseStack, WaxyVision.COPPER_GOLEM_OVERLAY, packedLight, packedOverlay, outlineColor, crumblingOverlay);
+        instance.order(1).submitModel(model, state, poseStack, WaxyVisionBuiltinTextures.COPPER_GOLEM_OVERLAY, packedLight, packedOverlay, outlineColor, crumblingOverlay);
     }
 }

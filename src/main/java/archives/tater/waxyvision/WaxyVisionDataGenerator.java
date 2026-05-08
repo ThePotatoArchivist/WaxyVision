@@ -1,5 +1,6 @@
 package archives.tater.waxyvision;
 
+import archives.tater.waxyvision.datagen.LangGenerator;
 import archives.tater.waxyvision.datagen.ModelGenerator;
 import archives.tater.waxyvision.datagen.OverlayModelGenerator;
 
@@ -12,5 +13,6 @@ public class WaxyVisionDataGenerator implements DataGeneratorEntrypoint {
 		var pack = fabricDataGenerator.createPack();
 		pack.addProvider(OverlayModelGenerator::new);
 		pack.addProvider(ModelGenerator::new);
+		pack.addProvider(LangGenerator::new);
 	}
 }

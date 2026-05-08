@@ -21,7 +21,7 @@ public class CopperGolemWaxLayer extends RenderLayer<CopperGolemRenderState, Cop
                 getParentModel(),
                 renderState,
                 poseStack,
-                WaxyVision.COPPER_GOLEM_OVERLAY,
+                WaxyVisionBuiltinTextures.COPPER_GOLEM_OVERLAY,
                 packedLight,
                 OverlayTexture.NO_OVERLAY,
                 renderState.outlineColor,

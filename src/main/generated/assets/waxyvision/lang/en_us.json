@@ -1,0 +1,9 @@
+{
+  "key.category.waxyvision.category": "WaxyVision",
+  "key.waxyvision.toggle_enabled": "Toggle Enabled",
+  "key.waxyvision.toggle_item_required": "Toggle Item Required",
+  "waxyvision.toggle.enabled": "WaxyVision %s",
+  "waxyvision.toggle.off": "OFF",
+  "waxyvision.toggle.on": "ON",
+  "waxyvision.toggle.requireItem": "WaxyVision: Item Requirement %s"
+}

@@ -10,20 +10,20 @@ import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegist
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
+import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.CopperGolemRenderer;
 import net.minecraft.client.resources.model.BlockStateModelLoader;
-import net.minecraft.client.resources.model.sprite.SpriteId;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.Property;
 
 import org.jetbrains.annotations.ApiStatus;
@@ -31,8 +31,10 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class WaxyVision implements ClientModInitializer {
 	public static final String MOD_ID = "waxyvision";
@@ -45,31 +47,30 @@ public class WaxyVision implements ClientModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	public static boolean showOverlay = false;
+	public static final WaxyVisionConfig CONFIG = WaxyVisionConfig.createToml(
+			FabricLoader.getInstance().getConfigDir(),
+			"",
+			MOD_ID,
+			WaxyVisionConfig.class
+	);
 
-	public static final Identifier COPPER_GOLEM_OVERLAY = id("textures/entity/copper_golem.png");
-	public static final SpriteId SIGN_OVERLAY = new SpriteId(Sheets.SIGN_SHEET, id("entity/signs/sign"));
-	public static final SpriteId HANGING_SIGN_OVERLAY = new SpriteId(Sheets.SIGN_SHEET, id("entity/signs/hanging_sign"));
-	public static final SpriteId CHEST_OVERLAY_SINGLE = new SpriteId(Sheets.CHEST_SHEET, id("entity/chest/single"));
-	public static final SpriteId CHEST_OVERLAY_RIGHT = new SpriteId(Sheets.CHEST_SHEET, id("entity/chest/left"));
-	public static final SpriteId CHEST_OVERLAY_LEFT = new SpriteId(Sheets.CHEST_SHEET, id("entity/chest/right"));
+	private static HolderSet<Item> waxItems = resolveItems(CONFIG.waxItems.value());
+	static {
+		CONFIG.waxItems.registerCallback(tracked -> {
+			waxItems = resolveItems(tracked.value());
+		});
+	}
 
 	public static final Identifier OVERLAY_MODELS_KEY = id("overlay_models");
 	public static final OverlayModels overlayModels = new OverlayModels();
+
+	public static boolean showOverlay = false;
 
 	public static final RenderStateDataKey<Boolean> WAXED = RenderStateDataKey.create(() -> MOD_ID + ":waxed");
 
 	@ApiStatus.Internal
 	@Nullable
 	public static BlockStateModelLoader.LoadedModels loadedModels;
-
-	public static SpriteId getChestOverlaySprite(ChestType type) {
-		return switch (type) {
-			case SINGLE -> CHEST_OVERLAY_SINGLE;
-			case LEFT -> CHEST_OVERLAY_LEFT;
-			case RIGHT -> CHEST_OVERLAY_RIGHT;
-		};
-	}
 
 	private static <T extends Comparable<T>> BlockState copy(BlockState target, BlockState source, Property<T> property) {
 		return target.setValue(property, source.getValue(property));
@@ -87,6 +88,19 @@ public class WaxyVision implements ClientModInitializer {
 				cameraSectionPos.x() + viewDistance,
 				cameraSectionPos.z() + viewDistance
 		);
+	}
+
+	private static boolean isHoldingWaxItem(Player player) {
+		return player.getMainHandItem().is(waxItems) || player.getOffhandItem().is(waxItems);
+	}
+
+	private static HolderSet.Direct<Item> resolveItems(Collection<String> itemIds) {
+		return HolderSet.direct(itemIds.stream()
+				.map(Identifier::tryParse)
+				.filter(Objects::nonNull)
+				.map(BuiltInRegistries.ITEM::get)
+				.flatMap(Optional::stream)
+				.toList());
 	}
 
 	@Override
@@ -119,15 +133,15 @@ public class WaxyVision implements ClientModInitializer {
 			});
 		});
 
+		WaxyVisionKeys.init();
+
 		ClientTickEvents.START_LEVEL_TICK.register(clientLevel -> {
 			var player = Minecraft.getInstance().player;
 			if (player == null) return;
 
-			var newShowOverlay = Arrays.stream(InteractionHand.values())
-					.anyMatch(hand -> player.getItemInHand(hand).is(Items.HONEYCOMB));
+			var newShowOverlay = CONFIG.enabled.value() && (!CONFIG.requireItem.value() || isHoldingWaxItem(player));
 			if (showOverlay != newShowOverlay) {
 				showOverlay = newShowOverlay;
-
 				rerenderAllChunks(clientLevel);
 			}
 		});

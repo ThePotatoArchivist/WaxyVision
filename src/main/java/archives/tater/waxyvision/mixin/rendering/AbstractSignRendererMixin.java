@@ -1,6 +1,7 @@
 package archives.tater.waxyvision.mixin.rendering;
 
 import archives.tater.waxyvision.WaxyVision;
+import archives.tater.waxyvision.WaxyVisionBuiltinTextures;
 import archives.tater.waxyvision.WaxyVisionCommon;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -56,8 +57,8 @@ public class AbstractSignRendererMixin<S extends SignRenderState> {
         original.call(instance, model, state, poseStack, lightCoords, overlayCoords, tintedColor, sprite, sprites, outlineColor, crumblingOverlay);
         if (!WAXED.get()) return;
         var overlaySprite = switch ((Object) this) {
-            case StandingSignRenderer ignored -> WaxyVision.SIGN_OVERLAY;
-            case HangingSignRenderer ignored -> WaxyVision.HANGING_SIGN_OVERLAY;
+            case StandingSignRenderer ignored -> WaxyVisionBuiltinTextures.SIGN_OVERLAY;
+            case HangingSignRenderer ignored -> WaxyVisionBuiltinTextures.HANGING_SIGN_OVERLAY;
             default -> null;
         };
         if (overlaySprite == null) return;

@@ -1,6 +1,7 @@
 package archives.tater.waxyvision.mixin.rendering;
 
 import archives.tater.waxyvision.WaxyVision;
+import archives.tater.waxyvision.WaxyVisionBuiltinTextures;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -41,6 +42,6 @@ public class ChestRendererMixin {
     private <T> void renderWaxed(SubmitNodeCollector instance, Model<T> model, T state, PoseStack poseStack, int lightCoords, int overlayCoords, int tintedColor, SpriteId sprite, SpriteGetter sprites, int outlineColor, ModelFeatureRenderer.CrumblingOverlay crumblingOverlay, Operation<Void> original, ChestRenderState chestRenderState) {
         original.call(instance, model, state, poseStack, lightCoords, overlayCoords, tintedColor, sprite, sprites, outlineColor, crumblingOverlay);
         if (!chestRenderState.getDataOrDefault(WaxyVision.WAXED, false)) return;
-        instance.order(1).submitModel(model, state, poseStack, lightCoords, overlayCoords, tintedColor, WaxyVision.getChestOverlaySprite(chestRenderState.type), sprites, outlineColor, crumblingOverlay);
+        instance.order(1).submitModel(model, state, poseStack, lightCoords, overlayCoords, tintedColor, WaxyVisionBuiltinTextures.getChestOverlaySprite(chestRenderState.type), sprites, outlineColor, crumblingOverlay);
     }
 }
