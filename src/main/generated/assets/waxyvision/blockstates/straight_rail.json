@@ -1,24 +1,24 @@
 {
   "variants": {
     "shape=ascending_east": {
-      "model": "waxyvision:block/straight_rail_raised_ne",
+      "model": "waxyvision:rail_raised_ne",
       "y": 90
     },
     "shape=ascending_north": {
-      "model": "waxyvision:block/straight_rail_raised_ne"
+      "model": "waxyvision:rail_raised_ne"
     },
     "shape=ascending_south": {
-      "model": "waxyvision:block/straight_rail_raised_sw"
+      "model": "waxyvision:rail_raised_sw"
     },
     "shape=ascending_west": {
-      "model": "waxyvision:block/straight_rail_raised_sw",
+      "model": "waxyvision:rail_raised_sw",
       "y": 90
     },
     "shape=east_west": {
-      "model": "waxyvision:block/straight_rail"
+      "model": "waxyvision:rail"
     },
     "shape=north_south": {
-      "model": "waxyvision:block/straight_rail"
+      "model": "waxyvision:rail"
     }
   }
 }
