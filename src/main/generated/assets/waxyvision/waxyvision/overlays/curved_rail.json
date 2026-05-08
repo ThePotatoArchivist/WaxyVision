@@ -1,0 +1,9 @@
+{
+  "blocks": [
+    "maglev:waxed_maglev_rail",
+    "maglev:waxed_exposed_maglev_rail",
+    "maglev:waxed_weathered_maglev_rail",
+    "maglev:waxed_oxidized_maglev_rail"
+  ],
+  "model": "waxyvision:curved_rail"
+}
