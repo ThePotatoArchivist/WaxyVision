@@ -36,21 +36,15 @@ public class WaxyVisionKeys {
     public static final String ON_TRANSLATION = WaxyVision.MOD_ID + ".toggle.on";
     public static final String OFF_TRANSLATION = WaxyVision.MOD_ID + ".toggle.off";
     public static final Component ON_TEXT = Component.translatable(ON_TRANSLATION)
-            .withStyle(ChatFormatting.GREEN)
-            .withStyle(ChatFormatting.BOLD);
+            .withStyle(ChatFormatting.GREEN);
     public static final Component OFF_TEXT = Component.translatable(OFF_TRANSLATION)
-            .withStyle(ChatFormatting.RED)
-            .withStyle(ChatFormatting.BOLD);
-
-    private static Component createMessage(String translationKey, boolean enabled) {
-        return Component.translatable(translationKey, enabled ? ON_TEXT : OFF_TEXT);
-    }
+            .withStyle(ChatFormatting.RED);
 
     private static void toggle(Minecraft client, TrackedValue<Boolean> tracked, String translationKey) {
         var newValue = !tracked.value();
         tracked.setValue(newValue);
         if (client.player == null) return;
-        client.player.sendOverlayMessage(createMessage(translationKey, newValue));
+        client.player.sendOverlayMessage(Component.translatable(translationKey, newValue ? ON_TEXT : OFF_TEXT));
     }
 
     static void init() {
