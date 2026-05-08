@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels.UnbakedEntry> {
     public OverlayModelGenerator(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registriesFuture) {
@@ -101,6 +102,20 @@ public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels
                 Blocks.WAXED_EXPOSED_LIGHTNING_ROD,
                 Blocks.WAXED_WEATHERED_LIGHTNING_ROD,
                 Blocks.WAXED_OXIDIZED_LIGHTNING_ROD
+        );
+
+        var weatherSteps = List.of("", "exposed_", "weathered_", "oxidized_");
+        registerRaw(biConsumer, FakeBlocks.STRAIGHT_RAIL,
+                weatherSteps.stream().flatMap(weatheredness ->
+                    Stream.of("powered_", "variable_").map(type ->
+                            Identifier.fromNamespaceAndPath("maglev", "waxed_" + weatheredness + type + "maglev_rail")
+                    )
+                ).toList()
+        );
+        registerRaw(biConsumer, FakeBlocks.CURVED_RAIL,
+                weatherSteps.stream().map(weatheredness ->
+                        Identifier.fromNamespaceAndPath("maglev", "waxed_" + weatheredness + "maglev_rail")
+                ).toList()
         );
     }
 

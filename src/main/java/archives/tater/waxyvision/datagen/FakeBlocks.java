@@ -29,7 +29,8 @@ public class FakeBlocks {
     public static final Block LANTERN = register("lantern", LanternBlock::new);
     public static final Block BARS = register("bars", IronBarsBlock::new);
     public static final Block LIGHTNING_ROD = register("lightning_rod", LightningRodBlock::new);
-    public static final Block CHEST = register("chest", LightningRodBlock::new);
+    public static final Block STRAIGHT_RAIL = register("straight_rail", PoweredRailBlock::new);
+    public static final Block CURVED_RAIL = register("curved_rail", RailBlock::new);
 
     public static void init() {
 

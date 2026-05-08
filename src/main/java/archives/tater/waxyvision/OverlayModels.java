@@ -17,10 +17,7 @@ import com.google.gson.stream.JsonReader;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
@@ -40,7 +37,7 @@ public class OverlayModels implements PreparableReloadListener {
                     try (var reader = resource.openAsReader(); var jsonReader = new JsonReader(reader)) {
                         var result = UnbakedEntry.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseReader(jsonReader));
                         result.ifError(error ->
-                                WaxyVision.LOGGER.error("Failed to read overlay model {}: {}", entry.getKey(), error.message())
+                            WaxyVision.LOGGER.error("Failed to read overlay model {}: {}", entry.getKey(), error.message())
                         );
                         return result.resultOrPartial().stream();
                     } catch (IOException e) {
@@ -54,15 +51,22 @@ public class OverlayModels implements PreparableReloadListener {
                             .flatMap(block -> BuiltInRegistries.BLOCK.get(block).stream())
                             .map(Holder.Reference::value)
                             .toList();
+                    if (blocks.isEmpty()) return null;
                     var properties = blocks.stream().flatMap(block -> block.getStateDefinition().getProperties().stream()).collect(Collectors.toSet());
-                    for (var property : properties)
-                        builder.add(property);
+                    try {
+                        for (var property : properties)
+                            builder.add(property);
+                    } catch (IllegalArgumentException e) {
+                        WaxyVision.LOGGER.error("Incompatible blockstates for overlay {}: {}", unbakedEntry.model, e.getMessage());
+                        return null;
+                    }
                     var definition = builder.create(Block::defaultBlockState, BlockState::new);
                     var entry = new Entry(unbakedEntry.model, definition);
                     for (var block : blocks)
                         overlays.put(block, entry);
                     return entry;
                 })
+                .filter(Objects::nonNull)
                 .toList(),
         taskExecutor);
 
