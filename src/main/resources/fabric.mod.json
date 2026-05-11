@@ -3,15 +3,15 @@
 	"id": "waxyvision",
 	"version": "${version}",
 	"name": "WaxyVision",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Highlight waxed copper blocks when holding honeycomb",
 	"authors": [
 		"Me!"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://modrinth.com/mod/waxyvision",
+		"sources": "https://github.com/ThePotatoArchivist/WaxyVision"
 	},
-	"license": "CC0-1.0",
+	"license": "LGPL-v3.0-or-later",
 	"icon": "assets/waxyvision/icon.png",
 	"environment": "client",
 	"entrypoints": {
