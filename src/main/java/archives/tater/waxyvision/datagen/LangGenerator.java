@@ -19,8 +19,8 @@ public class LangGenerator extends FabricLanguageProvider {
         translationBuilder.add(WaxyVisionKeys.KEY_CATEGORY.id().toLanguageKey("key.category"), "WaxyVision");
         translationBuilder.add(WaxyVisionKeys.ENABLE_KEY.getName(), "Toggle Enabled");
         translationBuilder.add(WaxyVisionKeys.REQUIRE_ITEM_KEY.getName(), "Toggle Item Required");
-        translationBuilder.add(WaxyVisionKeys.ENABLED_TRANSLATION, "WaxyVision %s");
-        translationBuilder.add(WaxyVisionKeys.REQUIRE_TRANSLATION, "WaxyVision: Item Requirement %s");
+        translationBuilder.add(WaxyVisionKeys.ENABLED_TRANSLATION, "Waxed Overlay: %s");
+        translationBuilder.add(WaxyVisionKeys.REQUIRE_TRANSLATION, "Waxed Overlay Requires Item: %s");
         translationBuilder.add(WaxyVisionKeys.ON_TRANSLATION, "ON");
         translationBuilder.add(WaxyVisionKeys.OFF_TRANSLATION, "OFF");
     }
