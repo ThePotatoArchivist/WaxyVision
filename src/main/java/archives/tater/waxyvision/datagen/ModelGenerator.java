@@ -105,7 +105,7 @@ public class ModelGenerator extends FabricModelProvider {
         createTrapdoor(blockModelGenerators, FakeBlocks.TRAPDOOR, FakeBlocks.CUBE);
         createBars(blockModelGenerators, FakeBlocks.BARS, FakeBlocks.CUBE, FakeBlocks.BARS);
         createLightningRod(blockModelGenerators, FakeBlocks.LIGHTNING_ROD);
-        createRails(blockModelGenerators, WaxyVision.id("rail"), FakeBlocks.CURVED_RAIL, FakeBlocks.STRAIGHT_RAIL, FakeBlocks.CUBE);
+        createRails(blockModelGenerators, WaxyVision.id("block/rail"), FakeBlocks.CURVED_RAIL, FakeBlocks.STRAIGHT_RAIL, FakeBlocks.CUBE);
     }
 
 
