@@ -11,7 +11,7 @@
 		"homepage": "https://modrinth.com/mod/waxyvision",
 		"sources": "https://github.com/ThePotatoArchivist/WaxyVision"
 	},
-	"license": "LGPL-v3.0-or-later",
+	"license": "LGPL-3.0-or-later",
 	"icon": "assets/waxyvision/icon.png",
 	"environment": "client",
 	"entrypoints": {
