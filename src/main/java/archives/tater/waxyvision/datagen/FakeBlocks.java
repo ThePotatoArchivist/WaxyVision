@@ -1,10 +1,12 @@
 package archives.tater.waxyvision.datagen;
 
+import archives.tater.waxyvision.OverlayModels;
 import archives.tater.waxyvision.WaxyVision;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -14,13 +16,17 @@ import java.util.function.Function;
 
 public class FakeBlocks {
 
-    private static Block register(String path, Function<BlockBehaviour.Properties, Block> factory) {
-        var key = ResourceKey.create(Registries.BLOCK, WaxyVision.id(path));
+    private static Block register(Identifier id, Function<BlockBehaviour.Properties, Block> factory) {
+        var key = ResourceKey.create(Registries.BLOCK, id);
         var block = factory.apply(BlockBehaviour.Properties.of().setId(key));
         return Registry.register(BuiltInRegistries.BLOCK, key, block);
     }
 
-    public static final Block CUBE = register("cube", Block::new);
+    private static Block register(String path, Function<BlockBehaviour.Properties, Block> factory) {
+        return register(WaxyVision.id(path), factory);
+    }
+
+    public static final Block CUBE = register(OverlayModels.CUBE_MODEL, Block::new);
     public static final Block STAIRS = register("stairs", properties -> new StairBlock(CUBE.defaultBlockState(), properties));
     public static final Block SLAB = register("slab", SlabBlock::new);
     public static final Block DOOR = register("door", properties -> new DoorBlock(BlockSetType.PALE_OAK, properties));

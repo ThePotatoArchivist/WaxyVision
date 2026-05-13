@@ -3,14 +3,18 @@ package archives.tater.waxyvision;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.world.item.HoneycombItem;
+import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.shapes.Shapes;
 
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
@@ -25,6 +29,8 @@ import java.util.stream.Stream;
 
 public class OverlayModels implements PreparableReloadListener {
     public static final String PATH = "waxyvision/overlays";
+    public static final Identifier CUBE_MODEL = WaxyVision.id("cube");
+
     private CompletableFuture<List<Entry>> entries = CompletableFuture.completedFuture(List.of());
     private final Map<Block, Entry> overlays = new IdentityHashMap<>();
 
@@ -64,6 +70,12 @@ public class OverlayModels implements PreparableReloadListener {
                     var entry = new Entry(unbakedEntry.model, definition);
                     for (var block : blocks)
                         overlays.put(block, entry);
+
+                    if (entry.id.equals(CUBE_MODEL))
+                        for (var block : HoneycombItem.WAXABLES.get().values())
+                            if (block.defaultBlockState().getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO).equals(Shapes.block()))
+                                overlays.putIfAbsent(block, entry);
+
                     return entry;
                 })
                 .filter(Objects::nonNull)

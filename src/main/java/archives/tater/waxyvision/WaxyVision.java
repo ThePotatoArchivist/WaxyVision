@@ -73,7 +73,7 @@ public class WaxyVision implements ClientModInitializer {
 	public static BlockStateModelLoader.LoadedModels loadedModels;
 
 	private static <T extends Comparable<T>> BlockState copy(BlockState target, BlockState source, Property<T> property) {
-		return target.setValue(property, source.getValue(property));
+		return target.trySetValue(property, source.getValue(property));
 	}
 
 	private static void rerenderAllChunks(ClientLevel clientLevel) {
