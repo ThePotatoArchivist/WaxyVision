@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.properties.RailShape;
 
 import java.util.function.Function;
 
-import static net.minecraft.client.data.models.BlockModelGenerators.Y_ROT_90;
+import static net.minecraft.client.data.models.BlockModelGenerators.*;
 import static net.minecraft.client.data.models.BlockModelGenerators.plainVariant;
 
 public class ModelGenerator extends FabricModelProvider {
@@ -54,21 +54,21 @@ public class ModelGenerator extends FabricModelProvider {
                 );
     }
 
-    private void createTrapdoor(BlockModelGenerators blockModelGenerators, Block trapdoor, Block textureBlock) {
-        var texture = TextureMapping.defaultTexture(textureBlock);
+    private void createTrapdoor(BlockModelGenerators blockModelGenerators, Block trapdoor, Block texture) {
+        var mapping = TextureMapping.defaultTexture(texture);
         blockModelGenerators.blockStateOutput.accept(BlockModelGenerators.createTrapdoor(
                 trapdoor,
-                plainVariant(ModelTemplates.TRAPDOOR_TOP.create(trapdoor, texture, blockModelGenerators.modelOutput)),
-                plainVariant(ModelTemplates.TRAPDOOR_BOTTOM.create(trapdoor, texture, blockModelGenerators.modelOutput)),
-                plainVariant(ModelTemplates.TRAPDOOR_OPEN.create(trapdoor, texture, blockModelGenerators.modelOutput))
+                plainVariant(ModelTemplates.TRAPDOOR_TOP.create(trapdoor, mapping, blockModelGenerators.modelOutput)),
+                plainVariant(ModelTemplates.TRAPDOOR_BOTTOM.create(trapdoor, mapping, blockModelGenerators.modelOutput)),
+                plainVariant(ModelTemplates.TRAPDOOR_OPEN.create(trapdoor, mapping, blockModelGenerators.modelOutput))
         ));
     }
 
-    private void createRails(BlockModelGenerators blockModelGenerators, Identifier id, Block curvedRail, Block straightRail, Block textureBlock) {
-        var texture = TextureMapping.rail(textureBlock);
-        var flat = plainVariant(ModelTemplates.RAIL_FLAT.create(id, texture, blockModelGenerators.modelOutput));
-        var risingNE = plainVariant(ModelTemplates.RAIL_RAISED_NE.create(id.withSuffix("_raised_ne"), texture, blockModelGenerators.modelOutput));
-        var risingSW = plainVariant(ModelTemplates.RAIL_RAISED_SW.create(id.withSuffix("_raised_sw"), texture, blockModelGenerators.modelOutput));
+    private void createRails(BlockModelGenerators blockModelGenerators, Identifier id, Block curvedRail, Block straightRail, Block texture) {
+        var mapping = TextureMapping.rail(texture);
+        var flat = plainVariant(ModelTemplates.RAIL_FLAT.create(id, mapping, blockModelGenerators.modelOutput));
+        var risingNE = plainVariant(ModelTemplates.RAIL_RAISED_NE.create(id.withSuffix("_raised_ne"), mapping, blockModelGenerators.modelOutput));
+        var risingSW = plainVariant(ModelTemplates.RAIL_RAISED_SW.create(id.withSuffix("_raised_sw"), mapping, blockModelGenerators.modelOutput));
 
         Function<RailShape, MultiVariant> generator = shape -> switch (shape) {
             case ASCENDING_EAST -> risingNE.with(Y_ROT_90);
@@ -89,6 +89,34 @@ public class ModelGenerator extends FabricModelProvider {
         );
     }
 
+    private void createPressurePlate(BlockModelGenerators blockModelGenerators, Block block) {
+        var mapping = TextureMapping.defaultTexture(block);
+        blockModelGenerators.blockStateOutput.accept(BlockModelGenerators.createPressurePlate(
+                block,
+                plainVariant(ModelTemplates.PRESSURE_PLATE_UP.create(block, mapping, blockModelGenerators.modelOutput)),
+                plainVariant(ModelTemplates.PRESSURE_PLATE_DOWN.create(block, mapping, blockModelGenerators.modelOutput))
+        ));
+    }
+
+    private void createCopperierPressurePlate(BlockModelGenerators blockModelGenerators, Block block, Block normal) {
+        var mapping = TextureMapping.defaultTexture(normal);
+        var off = plainVariant(ModelTemplates.PRESSURE_PLATE_UP.create(block, mapping, blockModelGenerators.modelOutput));
+        var on = plainVariant(ModelTemplates.PRESSURE_PLATE_DOWN.create(block, mapping, blockModelGenerators.modelOutput));
+        blockModelGenerators.blockStateOutput.accept(
+                MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(FakeBlocks.CopperierPressurePlateBlock.POWER_10)
+                                .generate(power -> power == 0 ? off : on)
+        ));
+    }
+
+    private void createButton(BlockModelGenerators blockModelGenerators, Block block) {
+        var mapping = TextureMapping.defaultTexture(block);
+        blockModelGenerators.blockStateOutput.accept(BlockModelGenerators.createButton(
+                block,
+                plainVariant(ModelTemplates.BUTTON.create(block, mapping, blockModelGenerators.modelOutput)),
+                plainVariant(ModelTemplates.BUTTON_PRESSED.create(block, mapping, blockModelGenerators.modelOutput))
+        ));
+    }
+
     @Override
     public void generateBlockStateModels(BlockModelGenerators blockModelGenerators) {
         var family = BlockFamilies.familyBuilder(FakeBlocks.CUBE)
@@ -106,6 +134,9 @@ public class ModelGenerator extends FabricModelProvider {
         createBars(blockModelGenerators, FakeBlocks.BARS, FakeBlocks.CUBE, FakeBlocks.BARS);
         createLightningRod(blockModelGenerators, FakeBlocks.LIGHTNING_ROD);
         createRails(blockModelGenerators, WaxyVision.id("block/rail"), FakeBlocks.CURVED_RAIL, FakeBlocks.STRAIGHT_RAIL, FakeBlocks.CUBE);
+        createPressurePlate(blockModelGenerators, FakeBlocks.PRESSURE_PLATE);
+        createCopperierPressurePlate(blockModelGenerators, FakeBlocks.COPPERIER_PRESSURE_PLATE, FakeBlocks.PRESSURE_PLATE);
+        createButton(blockModelGenerators, FakeBlocks.BUTTON);
     }
 
 

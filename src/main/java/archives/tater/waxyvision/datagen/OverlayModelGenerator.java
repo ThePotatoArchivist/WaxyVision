@@ -20,9 +20,12 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels.UnbakedEntry> {
+
     public OverlayModelGenerator(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(dataOutput, registriesFuture, PackOutput.Target.RESOURCE_PACK, OverlayModels.PATH, OverlayModels.UnbakedEntry.CODEC);
     }
+
+    private static final List<String> WEATHER_STEPS = List.of("", "exposed_", "weathered_", "oxidized_");
 
     private static List<Block> waxed(WeatheringCopperBlocks blocks) {
         return List.of(
@@ -33,17 +36,38 @@ public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels
         );
     }
 
+    private static Stream<Identifier> prefixed(Identifier... blocks) {
+        return Arrays.stream(blocks)
+                .flatMap(id -> WEATHER_STEPS.stream().map(step -> id.withPrefix("waxed_" + step)));
+    }
+
+    private static Stream<Identifier> getIds(Stream<Block> blocks) {
+        return blocks.map(BuiltInRegistries.BLOCK::getKey);
+    }
+
     private static void registerRaw(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, List<Identifier> blocks) {
         var id = BuiltInRegistries.BLOCK.getKey(modelBlock);
         consumer.accept(id, new OverlayModels.UnbakedEntry(id, blocks));
     }
 
     private static void register(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, List<Block> blocks) {
-        registerRaw(consumer, modelBlock, blocks.stream().map(BuiltInRegistries.BLOCK::getKey).toList());
+        registerRaw(consumer, modelBlock, getIds(blocks.stream()).toList());
     }
 
     private static void register(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, Block... blocks) {
-        registerRaw(consumer, modelBlock, Arrays.stream(blocks).map(BuiltInRegistries.BLOCK::getKey).toList());
+        registerRaw(consumer, modelBlock, getIds(Arrays.stream(blocks)).toList());
+    }
+
+    private static void registerRawPrefixed(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, Identifier... blocks) {
+            registerRaw(consumer, modelBlock, prefixed(blocks).toList());
+    }
+
+    private static Identifier maglev(String path) {
+        return Identifier.fromNamespaceAndPath("maglev", path);
+    }
+
+    private static Identifier copperierAge(String path) {
+        return Identifier.fromNamespaceAndPath("thecopperierage", path);
     }
 
     @Override
@@ -104,18 +128,27 @@ public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels
                 Blocks.WAXED_OXIDIZED_LIGHTNING_ROD
         );
 
-        var weatherSteps = List.of("", "exposed_", "weathered_", "oxidized_");
-        registerRaw(biConsumer, FakeBlocks.STRAIGHT_RAIL,
-                weatherSteps.stream().flatMap(weatheredness ->
-                    Stream.of("powered_", "variable_").map(type ->
-                            Identifier.fromNamespaceAndPath("maglev", "waxed_" + weatheredness + type + "maglev_rail")
-                    )
-                ).toList()
+        registerRawPrefixed(
+                biConsumer,
+                FakeBlocks.STRAIGHT_RAIL,
+                maglev("powered_maglev_rail"),
+                maglev("variable_maglev_rail")
         );
-        registerRaw(biConsumer, FakeBlocks.CURVED_RAIL,
-                weatherSteps.stream().map(weatheredness ->
-                        Identifier.fromNamespaceAndPath("maglev", "waxed_" + weatheredness + "maglev_rail")
-                ).toList()
+        registerRawPrefixed(
+                biConsumer,
+                FakeBlocks.CURVED_RAIL,
+                maglev("maglev_rail")
+        );
+
+        registerRawPrefixed(
+                biConsumer,
+                FakeBlocks.COPPERIER_PRESSURE_PLATE,
+                copperierAge("weighted_pressure_plate")
+        );
+        registerRawPrefixed(
+                biConsumer,
+                FakeBlocks.BUTTON,
+                copperierAge("copper_button")
         );
     }
 

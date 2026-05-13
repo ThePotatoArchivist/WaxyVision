@@ -1,12 +1,12 @@
 {
   "blocks": [
     "maglev:waxed_powered_maglev_rail",
-    "maglev:waxed_variable_maglev_rail",
     "maglev:waxed_exposed_powered_maglev_rail",
-    "maglev:waxed_exposed_variable_maglev_rail",
     "maglev:waxed_weathered_powered_maglev_rail",
-    "maglev:waxed_weathered_variable_maglev_rail",
     "maglev:waxed_oxidized_powered_maglev_rail",
+    "maglev:waxed_variable_maglev_rail",
+    "maglev:waxed_exposed_variable_maglev_rail",
+    "maglev:waxed_weathered_variable_maglev_rail",
     "maglev:waxed_oxidized_variable_maglev_rail"
   ],
   "model": "waxyvision:straight_rail"
