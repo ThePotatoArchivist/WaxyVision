@@ -30,8 +30,8 @@ public class FakeBlocks {
     }
 
     public static final Block CUBE = register(OverlayModels.CUBE_MODEL, Block::new);
-    public static final Block STAIRS = register("stairs", properties -> new StairBlock(CUBE.defaultBlockState(), properties));
-    public static final Block SLAB = register("slab", SlabBlock::new);
+    public static final Block STAIRS = register(OverlayModels.STAIRS_MODEL, properties -> new StairBlock(CUBE.defaultBlockState(), properties));
+    public static final Block SLAB = register(OverlayModels.SLAB_MODEL, SlabBlock::new);
     public static final Block DOOR = register("door", properties -> new DoorBlock(BlockSetType.PALE_OAK, properties));
     public static final Block TRAPDOOR = register("trapdoor", properties -> new TrapDoorBlock(BlockSetType.PALE_OAK, properties));
     public static final Block CHAIN = register("chain", ChainBlock::new);

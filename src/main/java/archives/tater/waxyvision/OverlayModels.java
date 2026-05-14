@@ -12,9 +12,12 @@ import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
@@ -27,9 +30,22 @@ import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.groupingBy;
+
 public class OverlayModels implements PreparableReloadListener {
     public static final String PATH = "waxyvision/overlays";
     public static final Identifier CUBE_MODEL = WaxyVision.id("cube");
+    public static final Identifier STAIRS_MODEL = WaxyVision.id("stairs");
+    public static final Identifier SLAB_MODEL = WaxyVision.id("slab");
+    private static final Identifier NONE_MODEL = WaxyVision.id("none");
+    private static final VoxelShape CUBE = Shapes.block();
+
+    private static final Map<Identifier, List<Block>> AUTO_MODELS = HoneycombItem.WAXABLES.get().values().stream().collect(groupingBy(block -> switch(block) {
+        case StairBlock _ -> STAIRS_MODEL;
+        case SlabBlock _ -> SLAB_MODEL;
+        case Block _ when block.defaultBlockState().getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO) == CUBE -> CUBE_MODEL;
+        default -> NONE_MODEL;
+    }));
 
     private CompletableFuture<List<Entry>> entries = CompletableFuture.completedFuture(List.of());
     private final Map<Block, Entry> overlays = new IdentityHashMap<>();
@@ -71,10 +87,10 @@ public class OverlayModels implements PreparableReloadListener {
                     for (var block : blocks)
                         overlays.put(block, entry);
 
-                    if (entry.id.equals(CUBE_MODEL))
-                        for (var block : HoneycombItem.WAXABLES.get().values())
-                            if (block.defaultBlockState().getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO).equals(Shapes.block()))
-                                overlays.putIfAbsent(block, entry);
+                    var autoModelBlocks = AUTO_MODELS.get(entry.id);
+                    if (autoModelBlocks != null)
+                        for (var block : autoModelBlocks)
+                            overlays.putIfAbsent(block, entry);
 
                     return entry;
                 })
