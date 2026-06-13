@@ -4,6 +4,7 @@ import archives.tater.waxyvision.model.CompositeBlockstateModelRoot;
 import archives.tater.waxyvision.model.OverlayBlockStateModel;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegistrationCallback;
@@ -77,7 +78,7 @@ public class WaxyVision implements ClientModInitializer {
 	}
 
 	private static void rerenderAllChunks(ClientLevel clientLevel) {
-		var cameraSectionPos = SectionPos.of(Minecraft.getInstance().gameRenderer.getMainCamera().position());
+		var cameraSectionPos = SectionPos.of(Minecraft.getInstance().gameRenderer.mainCamera().position());
 		var viewDistance = Minecraft.getInstance().options.getEffectiveRenderDistance();
 
 		clientLevel.setSectionRangeDirty(
@@ -149,6 +150,14 @@ public class WaxyVision implements ClientModInitializer {
 		LivingEntityRenderLayerRegistrationCallback.EVENT.register((_, entityRenderer, registrationHelper, _) -> {
 			if (entityRenderer instanceof CopperGolemRenderer copperGolemRenderer)
 				registrationHelper.register(new CopperGolemWaxLayer(copperGolemRenderer));
+		});
+
+		ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> {
+			blockEntity.onAttachedSet(WaxyVisionCommon.WAXED).register((oldValue, newValue) -> {
+				if (oldValue == newValue) return;
+				var pos = blockEntity.getBlockPos();
+				Minecraft.getInstance().levelExtractor.setBlocksDirty(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY(), pos.getZ());
+			});
 		});
 	}
 }

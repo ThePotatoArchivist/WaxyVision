@@ -1,0 +1,15 @@
+{
+  "blocks": [
+    "minecraft:oak_sign",
+    "minecraft:spruce_sign",
+    "minecraft:birch_sign",
+    "minecraft:acacia_sign",
+    "minecraft:cherry_sign",
+    "minecraft:jungle_sign",
+    "minecraft:dark_oak_sign",
+    "minecraft:pale_oak_sign",
+    "minecraft:mangrove_sign",
+    "minecraft:bamboo_sign"
+  ],
+  "model": "waxyvision:sign"
+}

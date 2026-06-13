@@ -1,6 +1,7 @@
 package archives.tater.waxyvision.model;
 
 import archives.tater.waxyvision.WaxyVision;
+import archives.tater.waxyvision.WaxyVisionCommon;
 
 import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;
 import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadEmitter;
@@ -13,6 +14,7 @@ import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.jspecify.annotations.Nullable;
@@ -29,6 +31,10 @@ public class OverlayBlockStateModel extends WrapperBlockStateModel {
         return WaxyVision.showOverlay;
     }
 
+    private boolean shouldShow(BlockAndTintGetter blockView, BlockPos pos, BlockState state) {
+        return shouldShow() && (!state.hasBlockEntity() || !(blockView.getBlockEntity(pos) instanceof SignBlockEntity signBlockEntity) || signBlockEntity.hasAttached(WaxyVisionCommon.WAXED));
+    }
+
     @Override
     public void collectParts(RandomSource random, List<BlockStateModelPart> parts) {
         if (shouldShow())
@@ -37,7 +43,7 @@ public class OverlayBlockStateModel extends WrapperBlockStateModel {
 
     @Override
     public void emitQuads(QuadEmitter emitter, BlockAndTintGetter blockView, BlockPos pos, BlockState state, RandomSource random, Predicate<@Nullable Direction> cullTest) {
-        if (shouldShow())
+        if (shouldShow(blockView, pos, state))
             super.emitQuads(emitter, blockView, pos, state, random, cullTest);
     }
 

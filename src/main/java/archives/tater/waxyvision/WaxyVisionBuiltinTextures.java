@@ -13,8 +13,6 @@ public class WaxyVisionBuiltinTextures {
     }
 
     public static final Identifier COPPER_GOLEM_OVERLAY = WaxyVision.id("textures/entity/copper_golem.png");
-    public static final SpriteId SIGN_OVERLAY = sprite(Sheets.SIGN_SHEET, "entity/signs/sign");
-    public static final SpriteId HANGING_SIGN_OVERLAY = sprite(Sheets.SIGN_SHEET, "entity/signs/hanging_sign");
     public static final SpriteId CHEST_OVERLAY_SINGLE = sprite(Sheets.CHEST_SHEET, "entity/chest/single");
     public static final SpriteId CHEST_OVERLAY_RIGHT = sprite(Sheets.CHEST_SHEET, "entity/chest/left");
     public static final SpriteId CHEST_OVERLAY_LEFT = sprite(Sheets.CHEST_SHEET, "entity/chest/right");

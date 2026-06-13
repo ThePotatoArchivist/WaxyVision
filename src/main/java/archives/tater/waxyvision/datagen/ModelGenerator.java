@@ -123,6 +123,8 @@ public class ModelGenerator extends FabricModelProvider {
                 .stairs(FakeBlocks.STAIRS)
                 .slab(FakeBlocks.SLAB)
                 .door(FakeBlocks.DOOR)
+                .sign(FakeBlocks.SIGN, FakeBlocks.WALL_SIGN)
+                .hangingSign(FakeBlocks.HANGING_SIGN, FakeBlocks.WALL_HANGING_SIGN)
                 .getFamily();
         blockModelGenerators.family(family.getBaseBlock())
                 .generateFor(family);

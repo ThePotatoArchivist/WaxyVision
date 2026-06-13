@@ -11,7 +11,9 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.WeatheringCopperBlocks;
+import net.minecraft.world.level.block.WeatheringCopperCollection;
+
+import com.google.common.collect.Streams;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,13 +29,16 @@ public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels
 
     private static final List<String> WEATHER_STEPS = List.of("", "exposed_", "weathered_", "oxidized_");
 
-    private static List<Block> waxed(WeatheringCopperBlocks blocks) {
-        return List.of(
-                blocks.waxed(),
-                blocks.waxedExposed(),
-                blocks.waxedWeathered(),
-                blocks.waxedOxidized()
-        );
+    private static List<Block> toList(WeatheringCopperCollection.ByState<Block> blocks) {
+        return toStream(blocks).toList();
+    }
+
+    private static Stream<Block> toStream(WeatheringCopperCollection.ByState<Block> blocks) {
+        return Stream.of(blocks.unaffected(), blocks.exposed(), blocks.weathered(), blocks.oxidized());
+    }
+
+    private static Stream<Block> waxed(WeatheringCopperCollection<Block> blocks) {
+        return toStream(blocks.waxed());
     }
 
     private static Stream<Identifier> prefixed(Identifier... blocks) {
@@ -50,16 +55,24 @@ public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels
         consumer.accept(id, new OverlayModels.UnbakedEntry(id, blocks));
     }
 
+    private static void registerRaw(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, Stream<Identifier> blocks) {
+        registerRaw(consumer, modelBlock, blocks.toList());
+    }
+
+    private static void register(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, Stream<Block> blocks) {
+        registerRaw(consumer, modelBlock, getIds(blocks));
+    }
+
     private static void register(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, List<Block> blocks) {
-        registerRaw(consumer, modelBlock, getIds(blocks.stream()).toList());
+        register(consumer, modelBlock, blocks.stream());
     }
 
     private static void register(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, Block... blocks) {
-        registerRaw(consumer, modelBlock, getIds(Arrays.stream(blocks)).toList());
+        register(consumer, modelBlock, Arrays.stream(blocks));
     }
 
     private static void registerRawPrefixed(BiConsumer<Identifier, OverlayModels.UnbakedEntry> consumer, Block modelBlock, Identifier... blocks) {
-            registerRaw(consumer, modelBlock, prefixed(blocks).toList());
+            registerRaw(consumer, modelBlock, prefixed(blocks));
     }
 
     private static Identifier maglev(String path) {
@@ -72,60 +85,68 @@ public class OverlayModelGenerator extends FabricCodecDataProvider<OverlayModels
 
     @Override
     protected void configure(BiConsumer<Identifier, OverlayModels.UnbakedEntry> biConsumer, HolderLookup.Provider provider) {
-        register(biConsumer, FakeBlocks.CUBE,
-                Blocks.WAXED_COPPER_BLOCK,
-                Blocks.WAXED_CUT_COPPER,
-                Blocks.WAXED_CHISELED_COPPER,
-                Blocks.WAXED_COPPER_GRATE,
-                Blocks.WAXED_COPPER_BULB,
-                Blocks.WAXED_EXPOSED_COPPER,
-                Blocks.WAXED_EXPOSED_CUT_COPPER,
-                Blocks.WAXED_EXPOSED_CHISELED_COPPER,
-                Blocks.WAXED_EXPOSED_COPPER_GRATE,
-                Blocks.WAXED_EXPOSED_COPPER_BULB,
-                Blocks.WAXED_WEATHERED_COPPER,
-                Blocks.WAXED_WEATHERED_CUT_COPPER,
-                Blocks.WAXED_WEATHERED_CHISELED_COPPER,
-                Blocks.WAXED_WEATHERED_COPPER_GRATE,
-                Blocks.WAXED_WEATHERED_COPPER_BULB,
-                Blocks.WAXED_OXIDIZED_COPPER,
-                Blocks.WAXED_OXIDIZED_CUT_COPPER,
-                Blocks.WAXED_OXIDIZED_CHISELED_COPPER,
-                Blocks.WAXED_OXIDIZED_COPPER_GRATE,
-                Blocks.WAXED_OXIDIZED_COPPER_BULB
-        );
-        register(biConsumer, FakeBlocks.STAIRS,
-                Blocks.WAXED_CUT_COPPER_STAIRS,
-                Blocks.WAXED_EXPOSED_CUT_COPPER_STAIRS,
-                Blocks.WAXED_WEATHERED_CUT_COPPER_STAIRS,
-                Blocks.WAXED_OXIDIZED_CUT_COPPER_STAIRS
-        );
-        register(biConsumer, FakeBlocks.SLAB,
-                Blocks.WAXED_CUT_COPPER_SLAB,
-                Blocks.WAXED_EXPOSED_CUT_COPPER_SLAB,
-                Blocks.WAXED_WEATHERED_CUT_COPPER_SLAB,
-                Blocks.WAXED_OXIDIZED_CUT_COPPER_SLAB
-        );
-        register(biConsumer, FakeBlocks.DOOR,
-                Blocks.WAXED_COPPER_DOOR,
-                Blocks.WAXED_EXPOSED_COPPER_DOOR,
-                Blocks.WAXED_WEATHERED_COPPER_DOOR,
-                Blocks.WAXED_OXIDIZED_COPPER_DOOR
-        );
-        register(biConsumer, FakeBlocks.TRAPDOOR,
-                Blocks.WAXED_COPPER_TRAPDOOR,
-                Blocks.WAXED_EXPOSED_COPPER_TRAPDOOR,
-                Blocks.WAXED_WEATHERED_COPPER_TRAPDOOR,
-                Blocks.WAXED_OXIDIZED_COPPER_TRAPDOOR
-        );
+        register(biConsumer, FakeBlocks.CUBE, Streams.concat(
+                waxed(Blocks.COPPER_BLOCK),
+                waxed(Blocks.CUT_COPPER),
+                waxed(Blocks.CHISELED_COPPER),
+                waxed(Blocks.COPPER_GRATE),
+                waxed(Blocks.COPPER_BULB)
+        ));
+        register(biConsumer, FakeBlocks.STAIRS, waxed(Blocks.CUT_COPPER_STAIRS));
+        register(biConsumer, FakeBlocks.SLAB, waxed(Blocks.CUT_COPPER_SLAB));
+        register(biConsumer, FakeBlocks.DOOR, waxed(Blocks.COPPER_DOOR));
+        register(biConsumer, FakeBlocks.TRAPDOOR, waxed(Blocks.COPPER_TRAPDOOR));
         register(biConsumer, FakeBlocks.CHAIN, waxed(Blocks.COPPER_CHAIN));
         register(biConsumer, FakeBlocks.LANTERN, waxed(Blocks.COPPER_LANTERN));
         register(biConsumer, FakeBlocks.BARS, waxed(Blocks.COPPER_BARS));
-        register(biConsumer, FakeBlocks.LIGHTNING_ROD,
-                Blocks.WAXED_LIGHTNING_ROD,
-                Blocks.WAXED_EXPOSED_LIGHTNING_ROD,
-                Blocks.WAXED_WEATHERED_LIGHTNING_ROD,
-                Blocks.WAXED_OXIDIZED_LIGHTNING_ROD
+        register(biConsumer, FakeBlocks.LIGHTNING_ROD, waxed(Blocks.LIGHTNING_ROD));
+        register(biConsumer, FakeBlocks.SIGN,
+                Blocks.OAK_SIGN,
+                Blocks.SPRUCE_SIGN,
+                Blocks.BIRCH_SIGN,
+                Blocks.ACACIA_SIGN,
+                Blocks.CHERRY_SIGN,
+                Blocks.JUNGLE_SIGN,
+                Blocks.DARK_OAK_SIGN,
+                Blocks.PALE_OAK_SIGN,
+                Blocks.MANGROVE_SIGN,
+                Blocks.BAMBOO_SIGN
+        );
+        register(biConsumer, FakeBlocks.WALL_SIGN,
+                Blocks.OAK_WALL_SIGN,
+                Blocks.SPRUCE_WALL_SIGN,
+                Blocks.BIRCH_WALL_SIGN,
+                Blocks.ACACIA_WALL_SIGN,
+                Blocks.CHERRY_WALL_SIGN,
+                Blocks.JUNGLE_WALL_SIGN,
+                Blocks.DARK_OAK_WALL_SIGN,
+                Blocks.PALE_OAK_WALL_SIGN,
+                Blocks.MANGROVE_WALL_SIGN,
+                Blocks.BAMBOO_WALL_SIGN
+        );
+        register(biConsumer, FakeBlocks.HANGING_SIGN,
+                Blocks.OAK_HANGING_SIGN,
+                Blocks.SPRUCE_HANGING_SIGN,
+                Blocks.BIRCH_HANGING_SIGN,
+                Blocks.ACACIA_HANGING_SIGN,
+                Blocks.CHERRY_HANGING_SIGN,
+                Blocks.JUNGLE_HANGING_SIGN,
+                Blocks.DARK_OAK_HANGING_SIGN,
+                Blocks.PALE_OAK_HANGING_SIGN,
+                Blocks.MANGROVE_HANGING_SIGN,
+                Blocks.BAMBOO_HANGING_SIGN
+        );
+        register(biConsumer, FakeBlocks.WALL_HANGING_SIGN,
+                Blocks.OAK_WALL_HANGING_SIGN,
+                Blocks.SPRUCE_WALL_HANGING_SIGN,
+                Blocks.BIRCH_WALL_HANGING_SIGN,
+                Blocks.ACACIA_WALL_HANGING_SIGN,
+                Blocks.CHERRY_WALL_HANGING_SIGN,
+                Blocks.JUNGLE_WALL_HANGING_SIGN,
+                Blocks.DARK_OAK_WALL_HANGING_SIGN,
+                Blocks.PALE_OAK_WALL_HANGING_SIGN,
+                Blocks.MANGROVE_WALL_HANGING_SIGN,
+                Blocks.BAMBOO_WALL_HANGING_SIGN
         );
 
         registerRawPrefixed(

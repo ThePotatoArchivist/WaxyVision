@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.WoodType;
 
 import java.util.function.Function;
 
@@ -41,8 +42,12 @@ public class FakeBlocks {
     public static final Block STRAIGHT_RAIL = register("straight_rail", PoweredRailBlock::new);
     public static final Block CURVED_RAIL = register("curved_rail", RailBlock::new);
     public static final Block BUTTON = register("button", properties -> new ButtonBlock(BlockSetType.PALE_OAK, 0, properties));
-    public static final Block PRESSURE_PLATE = register("pressure_plate", type -> new PressurePlateBlock(BlockSetType.PALE_OAK, type));
+    public static final Block PRESSURE_PLATE = register("pressure_plate", properties -> new PressurePlateBlock(BlockSetType.PALE_OAK, properties));
     public static final Block COPPERIER_PRESSURE_PLATE = register("copperier_pressure_plate", CopperierPressurePlateBlock::new);
+    public static final Block SIGN = register("sign", properties -> new StandingSignBlock(WoodType.PALE_OAK, properties));
+    public static final Block WALL_SIGN = register("wall_sign", properties -> new WallSignBlock(WoodType.PALE_OAK, properties));
+    public static final Block HANGING_SIGN = register("hanging_sign", properties -> new CeilingHangingSignBlock(WoodType.PALE_OAK, properties));
+    public static final Block WALL_HANGING_SIGN = register("wall_hanging_sign", properties -> new WallHangingSignBlock(WoodType.PALE_OAK, properties));
 
     public static void init() {
 
